@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Measurement Units Page";
 }
+@if (TempData["ErrorMessage1"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage1"]
+    </div>
+}
+@if (TempData["ErrorMessage2"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage2"]
+    </div>
+}
 <h2>@ViewData["Title"]</h2>
 <a asp-controller="MeasurementUnit" asp-action="Create" class="btn btn-primary">Create Measurement Unit</a>
 
@@ -22,7 +34,9 @@
                 <td>@measurementUnit.Name</td>
                      <td>
                     <a asp-controller="MeasurementUnit" asp-action="Edit" asp-route-id="@measurementUnit.MeasurementUnitId">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@measurementUnit.MeasurementUnitId">Delete</a>
+                    <form asp-action="Delete" asp-route-id="@measurementUnit.MeasurementUnitId" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                    <button type="submit" class="btn-link">Delete</button>
+                    </form>
                     </td>
             </tr>
         }

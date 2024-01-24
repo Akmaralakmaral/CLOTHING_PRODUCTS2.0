@@ -1,0 +1,23 @@
+﻿@model CLOTHING_PRODUCTS.Models.RawMaterial
+
+<h2>Create New RawMaterial</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MeasurementUnitId">MeasurementUnit</label>
+        <select asp-for="MeasurementUnitId" asp-items="@(new SelectList(ViewBag.MeasurementUnits, "MeasurementUnitId", "Name"))" class="form-control" required></select>
+        <span asp-validation-for="MeasurementUnitId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

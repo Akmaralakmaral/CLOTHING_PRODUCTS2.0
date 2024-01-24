@@ -91,6 +91,21 @@ namespace CLOTHING_PRODUCTS.Controllers
                 return NotFound();
             }
 
+            // Проверка наличия связанных записей в таблице Employees
+            var hasRelatedRawMaterials = _dbContext.RawMaterials.Any(e => e.MeasurementUnitId == id);
+            var hasRelatedFinishedProducts = _dbContext.FinishedProducts.Any(e => e.MeasurementUnitId == id);
+            if (hasRelatedRawMaterials)
+            {
+                // Если есть связанные записи, выводим сообщение и не выполняем удаление
+                TempData["ErrorMessage1"] = "Невозможно удалить единицу измерения, так как она связана с таблицей RawMaterial.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (hasRelatedFinishedProducts)
+            {
+                // Если есть связанные записи, выводим сообщение и не выполняем удаление
+                TempData["ErrorMessage2"] = "Невозможно удалить единицу измерения, так как она связана с таблицей FinishedProduct.";
+                return RedirectToAction(nameof(Index));
+            }
             _dbContext.MeasurementUnits.Remove(measurementUnitsToDelete);
             await _dbContext.SaveChangesAsync();
 

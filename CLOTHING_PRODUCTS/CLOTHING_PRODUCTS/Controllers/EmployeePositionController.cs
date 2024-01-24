@@ -75,6 +75,22 @@ namespace CLOTHING_PRODUCTS.Controllers
            
         }
 
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var positionToDelete = await _dbContext.EmployeePositions.FindAsync(id);
+
+        //    if (positionToDelete == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _dbContext.EmployeePositions.Remove(positionToDelete);
+        //    await _dbContext.SaveChangesAsync();
+
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+
         public async Task<IActionResult> Delete(int id)
         {
             var positionToDelete = await _dbContext.EmployeePositions.FindAsync(id);
@@ -82,6 +98,16 @@ namespace CLOTHING_PRODUCTS.Controllers
             if (positionToDelete == null)
             {
                 return NotFound();
+            }
+
+            // Проверка наличия связанных записей в таблице Employees
+            var hasRelatedEmployees = _dbContext.Employees.Any(e => e.PositionId == id);
+
+            if (hasRelatedEmployees)
+            {
+                // Если есть связанные записи, выводим сообщение и не выполняем удаление
+                TempData["ErrorMessage"] = "Невозможно удалить должность, так как она связана с сотрудниками.";
+                return RedirectToAction(nameof(Index));
             }
 
             _dbContext.EmployeePositions.Remove(positionToDelete);
