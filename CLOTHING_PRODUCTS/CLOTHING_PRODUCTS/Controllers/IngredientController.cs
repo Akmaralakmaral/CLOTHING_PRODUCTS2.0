@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLOTHING_PRODUCTS.Controllers
 {
+    [Route("Ingredient")]
     public class IngredientController : Controller
     {
         private readonly AddDBContext _dbContext;
@@ -17,23 +18,26 @@ namespace CLOTHING_PRODUCTS.Controllers
 
         public IActionResult Index()
         {
-            // Получаем список видов готовой продукции
             var finishedProducts = _dbContext.FinishedProducts.ToList();
-            ViewBag.FinishedProducts = new SelectList(finishedProducts, "FinishedProductId", "Name");
-
-            return View(new List<Ingredient>()); // Пустой список, чтобы избежать ошибки
+            ViewBag.FinishedProducts = finishedProducts;
+            return View();
         }
 
-        [HttpPost]
+        [Route("GetIngredients/{finishedProductId}")]
         public IActionResult GetIngredients(int finishedProductId)
         {
-            // Получаем список ингредиентов для выбранного продукта
             var ingredients = _dbContext.Ingredients
                 .Where(i => i.FinishedProductId == finishedProductId)
                 .Include(i => i.RawMaterial)
+                .Select(i => new
+                {
+                    RawMaterialName = i.RawMaterial.Name,
+                    Quantity = i.Quantity
+                })
                 .ToList();
 
-            return PartialView("_IngredientsPartial", ingredients);
+            return Json(ingredients);
         }
+
     }
 }

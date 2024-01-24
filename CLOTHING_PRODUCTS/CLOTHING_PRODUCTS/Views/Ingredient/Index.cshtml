@@ -2,58 +2,61 @@
 
 <h2>Ingredients</h2>
 
-<form>
-    <div class="form-group">
-        <label for="productList">Select a Product:</label>
-        @Html.DropDownList("productList", (SelectList)ViewBag.Products, "Select a Product", new { @class = "form-control", id = "productList" })
-    </div>
-</form>
+<select id="finishedProductDropdown">
+    <option value="">Select Finished Product</option>
+    @foreach (var product in ViewBag.FinishedProducts)
+    {
+        <option value="@product.FinishedProductId">@product.Name</option>
+    }
+</select>
 
-<div id="ingredientForm" style="display:none;">
-    <h3>Ingredients for Selected Product</h3>
-    <table class="table">
+<div id="ingredientDetails" style="display:none;">
+    <h3>Raw Materials and Quantities</h3>
+    <table>
         <thead>
             <tr>
                 <th>Raw Material</th>
                 <th>Quantity</th>
             </tr>
         </thead>
-        <tbody id="ingredientTableBody">
-            <!-- Ingredient data will be displayed here dynamically -->
+        <tbody id="ingredientList">
+            <!-- Raw material details will be displayed here -->
         </tbody>
     </table>
 </div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $("#productList").change(function () {
-                var productId = $(this).val();
-                if (productId !== "") {
-                    $.ajax({
-                        type: "POST",
-                        url: "/Ingredient/GetIngredients",
-                        data: { productId: productId },
-                        success: function (data) {
-                            displayIngredients(data);
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                } else {
-                    $("#ingredientForm").hide();
-                }
-            });
+        document.getElementById('finishedProductDropdown').addEventListener('change', function () {
+            var selectedProductId = this.value;
+            if (selectedProductId !== "") {
+                // Make an AJAX request to get ingredient details
+                fetch(`/Ingredient/GetIngredients/${selectedProductId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the ingredient details in the table
+                        var ingredientList = document.getElementById('ingredientList');
+                        ingredientList.innerHTML = "";
 
-            function displayIngredients(ingredients) {
-                var tableBody = $("#ingredientTableBody");
-                tableBody.empty();
-                $.each(ingredients, function (index, ingredient) {
-                    var row = "<tr><td>" + ingredient.rawMaterial.name + "</td><td>" + ingredient.quantity + "</td></tr>";
-                    tableBody.append(row);
-                });
-                $("#ingredientForm").show();
+                        data.forEach(function (ingredient) {
+                            var row = document.createElement('tr');
+                            var rawMaterialCell = document.createElement('td');
+                            rawMaterialCell.textContent = ingredient.rawMaterialName;
+                            row.appendChild(rawMaterialCell);
+
+                            var quantityCell = document.createElement('td');
+                            quantityCell.textContent = ingredient.quantity;
+                            row.appendChild(quantityCell);
+
+                            ingredientList.appendChild(row);
+                        });
+
+                        // Show the ingredient details section
+                        document.getElementById('ingredientDetails').style.display = 'block';
+                    });
+            } else {
+                // Hide the ingredient details section
+                document.getElementById('ingredientDetails').style.display = 'none';
             }
         });
     </script>
