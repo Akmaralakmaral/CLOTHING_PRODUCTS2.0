@@ -1,0 +1,60 @@
+﻿@model CLOTHING_PRODUCTS.Models.Ingredient
+
+<h2>Ingredients</h2>
+
+<form>
+    <div class="form-group">
+        <label for="productList">Select a Product:</label>
+        @Html.DropDownList("productList", (SelectList)ViewBag.Products, "Select a Product", new { @class = "form-control", id = "productList" })
+    </div>
+</form>
+
+<div id="ingredientForm" style="display:none;">
+    <h3>Ingredients for Selected Product</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Raw Material</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody id="ingredientTableBody">
+            <!-- Ingredient data will be displayed here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#productList").change(function () {
+                var productId = $(this).val();
+                if (productId !== "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Ingredient/GetIngredients",
+                        data: { productId: productId },
+                        success: function (data) {
+                            displayIngredients(data);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $("#ingredientForm").hide();
+                }
+            });
+
+            function displayIngredients(ingredients) {
+                var tableBody = $("#ingredientTableBody");
+                tableBody.empty();
+                $.each(ingredients, function (index, ingredient) {
+                    var row = "<tr><td>" + ingredient.rawMaterial.name + "</td><td>" + ingredient.quantity + "</td></tr>";
+                    tableBody.append(row);
+                });
+                $("#ingredientForm").show();
+            }
+        });
+    </script>
+}
