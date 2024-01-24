@@ -1,0 +1,30 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.MeasurementUnit>
+
+@{
+    ViewData["Title"] = "Measurement Units Page";
+}
+<h2>@ViewData["Title"]</h2>
+<a asp-controller="MeasurementUnit" asp-action="Create" class="btn btn-primary">Create Measurement Unit</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Measurement Unit ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var measurementUnit in Model)
+        {
+            <tr>
+                <td>@measurementUnit.MeasurementUnitId</td>
+                <td>@measurementUnit.Name</td>
+                     <td>
+                    <a asp-controller="MeasurementUnit" asp-action="Edit" asp-route-id="@measurementUnit.MeasurementUnitId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@measurementUnit.MeasurementUnitId">Delete</a>
+                    </td>
+            </tr>
+        }
+    </tbody>
+</table>

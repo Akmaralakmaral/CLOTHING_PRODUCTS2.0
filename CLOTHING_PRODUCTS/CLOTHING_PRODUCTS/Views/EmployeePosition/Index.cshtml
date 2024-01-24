@@ -1,0 +1,32 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.EmployeePosition>
+
+@{
+    ViewData["Title"] = "Employee's Position Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-controller="EmployeePosition" asp-action="Create" class="btn btn-primary">Create Employee Position</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee Position ID</th>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var position in Model)
+        {
+            <tr>
+                <td>@position.EmployeePositionId</td>
+                <td>@position.Title</td>
+                <td>
+                    <a asp-controller="EmployeePosition" asp-action="Edit" asp-route-id="@position.EmployeePositionId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@position.EmployeePositionId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

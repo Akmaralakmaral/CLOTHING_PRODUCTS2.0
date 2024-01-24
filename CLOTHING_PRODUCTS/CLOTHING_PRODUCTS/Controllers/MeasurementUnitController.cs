@@ -1,0 +1,100 @@
+﻿using CLOTHING_PRODUCTS.Context;
+using CLOTHING_PRODUCTS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace CLOTHING_PRODUCTS.Controllers
+{
+    public class MeasurementUnitController : Controller
+    {
+        private readonly AddDBContext _dbContext;
+
+        public MeasurementUnitController(AddDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var measurementUnits = await _dbContext.MeasurementUnits.ToListAsync();
+            return View(measurementUnits);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(MeasurementUnit measurementUnit)
+        {
+           
+            _dbContext.MeasurementUnits.Add(measurementUnit);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+           
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var measurementUnit = await _dbContext.MeasurementUnits.FindAsync(id);
+
+            if (measurementUnit == null)
+            {
+                return NotFound();
+            }
+
+            return View(measurementUnit);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, MeasurementUnit measurementUnit)
+        {
+            if (id != measurementUnit.MeasurementUnitId)
+            {
+                return NotFound();
+            }
+
+           
+            try
+            {
+                _dbContext.Update(measurementUnit);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MeasurementUnitExists(measurementUnit.MeasurementUnitId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool MeasurementUnitExists(int id)
+        {
+            return _dbContext.MeasurementUnits.Any(e => e.MeasurementUnitId == id);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var measurementUnitsToDelete = await _dbContext.MeasurementUnits.FindAsync(id);
+
+            if (measurementUnitsToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _dbContext.MeasurementUnits.Remove(measurementUnitsToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}

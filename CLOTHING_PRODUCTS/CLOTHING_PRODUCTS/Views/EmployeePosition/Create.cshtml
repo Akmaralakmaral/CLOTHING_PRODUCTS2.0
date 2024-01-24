@@ -1,0 +1,16 @@
+﻿@model CLOTHING_PRODUCTS.Models.EmployeePosition
+
+@{
+    ViewData["Title"] = "Create Employee Position";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Position</button>
+</form>

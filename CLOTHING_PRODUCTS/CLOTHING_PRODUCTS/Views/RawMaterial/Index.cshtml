@@ -1,0 +1,38 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.RawMaterial>
+
+@{
+    ViewData["Title"] = "RawMaterial Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+<a asp-action="Create" class="btn btn-primary">Create New RawMaterial</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>RawMaterial ID</th>
+            <th>Name</th>
+            <th>MeasurementUnit</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rawMaterial in Model)
+        {
+            <tr>
+                <td>@rawMaterial.RawMaterialId</td>
+                <td>@rawMaterial.Name</td>
+                <td>@rawMaterial.MeasurementUnit.Name</td>
+                <td>@rawMaterial.Quantity</td>
+                <td>@rawMaterial.Amount</td>
+                <td>
+                    <a asp-controller="RawMaterial" asp-action="Edit" asp-route-id="@rawMaterial.RawMaterialId">Edit</a> |
+                    <form asp-action="Delete" asp-route-id="@rawMaterial.RawMaterialId" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                        <button type="submit" class="btn-link">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
