@@ -30,12 +30,20 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FinishedProduct finishedProduct)
         {
+            // Check if a FinishedProduct with the same name already exists
+            if (_dbContext.FinishedProducts.Any(fp => fp.Name == finishedProduct.Name))
+            {
+                ModelState.AddModelError("Name", "A FinishedProduct with the same name already exists.");
+                ViewBag.MeasurementUnits = _dbContext.MeasurementUnits.ToList();
+                return View(finishedProduct);
+            }
+
+            // If validation passes, continue with the creation of the FinishedProduct
             finishedProduct.Amount = 0.0;
             finishedProduct.Quantity = 0.0;
             _dbContext.FinishedProducts.Add(finishedProduct);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
         }
 
         public IActionResult Edit(int id)

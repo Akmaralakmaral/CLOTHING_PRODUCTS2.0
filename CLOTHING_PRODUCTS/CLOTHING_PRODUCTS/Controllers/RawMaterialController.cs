@@ -31,12 +31,20 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RawMaterial rawMaterial)
         {
+            // Check if a RawMaterial with the same name already exists
+            if (_dbContext.RawMaterials.Any(rm => rm.Name == rawMaterial.Name))
+            {
+                ModelState.AddModelError("Name", "A RawMaterial with the same name already exists.");
+                ViewBag.MeasurementUnits = _dbContext.MeasurementUnits.ToList();
+                return View(rawMaterial);
+            }
+
+            // If validation passes, continue with the creation of the RawMaterial
             rawMaterial.Amount = 0.0;
             rawMaterial.Quantity = 0.0;
             _dbContext.RawMaterials.Add(rawMaterial);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
         }
 
         public IActionResult Edit(int id)

@@ -1,0 +1,76 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.Ingredient>
+
+<!-- Render the form details based on the selected product -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ingredient ID</th>
+            <th>Raw Material</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Render the form details based on the selected product -->
+        @foreach (var ingredient in Model)
+        {
+            <tr>
+                <td>@ingredient.IngredientId</td>
+                <td>@ingredient.RawMaterial.Name</td>
+                <td>
+                    <span id="quantity_@ingredient.IngredientId">@ingredient.Quantity</span>
+                    <input type="text" id="editQuantity_@ingredient.IngredientId" style="display:none;" value="@ingredient.Quantity" />
+                </td>
+                <td>
+                    <a href="#" onclick="editQuantity('@ingredient.IngredientId')">Edit Quantity</a> |
+                    <a href="#" onclick="deleteIngredient('@ingredient.IngredientId')">Delete Ingredient</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function editQuantity(ingredientId) {
+        var newQuantity = prompt("Enter the new quantity:", $("#quantity_" + ingredientId).text());
+
+        if (newQuantity !== null) {
+            // Update the displayed quantity
+            $("#quantity_" + ingredientId).text(newQuantity);
+
+            // Make an AJAX call to update the quantity in the database
+            $.ajax({
+                type: "POST",
+                url: "/Ingredient/EditQuantity",
+                data: { ingredientId: ingredientId, newQuantity: newQuantity },
+                success: function (response) {
+                    // Handle success if needed
+                    console.log("Quantity updated successfully.");
+                },
+                error: function (error) {
+                    // Handle error if needed
+                    console.error("Error updating quantity:", error);
+                }
+            });
+        }
+    }
+
+    function deleteIngredient(ingredientId) {
+        if (confirm("Are you sure you want to delete this ingredient?")) {
+            // Make an AJAX call to delete the ingredient from the database
+            $.ajax({
+                type: "POST",
+                url: "/Ingredient/DeleteIngredient",
+                data: { ingredientId: ingredientId },
+                success: function (response) {
+                    // Handle success if needed
+                    console.log("Ingredient deleted successfully.");
+                },
+                error: function (error) {
+                    // Handle error if needed
+                    console.error("Error deleting ingredient:", error);
+                }
+            });
+        }
+    }
+</script>

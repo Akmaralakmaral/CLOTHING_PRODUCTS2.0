@@ -29,12 +29,17 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeePosition newPosition)
         {
-           
-            
-            _dbContext.EmployeePositions.Add(newPosition); // Добавление новой должности в контекст
-            await _dbContext.SaveChangesAsync(); // Сохранение изменений в базе данных
-            return RedirectToAction(nameof(Index)); // Перенаправление на метод Index
-            
+            // Check if an EmployeePosition with the same title already exists
+            if (_dbContext.EmployeePositions.Any(ep => ep.Title == newPosition.Title))
+            {
+                ModelState.AddModelError("Title", "An Employee Position with the same title already exists.");
+                return View(newPosition);
+            }
+
+            // If validation passes, continue with the creation of the EmployeePosition
+            _dbContext.EmployeePositions.Add(newPosition);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
 

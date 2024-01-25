@@ -1,63 +1,33 @@
-﻿@model CLOTHING_PRODUCTS.Models.Ingredient
+﻿@model List<CLOTHING_PRODUCTS.Models.Ingredient>
 
-<h2>Ingredients</h2>
-
-<select id="finishedProductDropdown">
-    <option value="">Select Finished Product</option>
-    @foreach (var product in ViewBag.FinishedProducts)
-    {
-        <option value="@product.FinishedProductId">@product.Name</option>
-    }
-</select>
-
-<div id="ingredientDetails" style="display:none;">
-    <h3>Raw Materials and Quantities</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Raw Material</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody id="ingredientList">
-            <!-- Raw material details will be displayed here -->
-        </tbody>
-    </table>
-</div>
-
-@section Scripts {
-    <script>
-        document.getElementById('finishedProductDropdown').addEventListener('change', function () {
-            var selectedProductId = this.value;
-            if (selectedProductId !== "") {
-                // Make an AJAX request to get ingredient details
-                fetch(`/Ingredient/GetIngredients/${selectedProductId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update the ingredient details in the table
-                        var ingredientList = document.getElementById('ingredientList');
-                        ingredientList.innerHTML = "";
-
-                        data.forEach(function (ingredient) {
-                            var row = document.createElement('tr');
-                            var rawMaterialCell = document.createElement('td');
-                            rawMaterialCell.textContent = ingredient.rawMaterialName;
-                            row.appendChild(rawMaterialCell);
-
-                            var quantityCell = document.createElement('td');
-                            quantityCell.textContent = ingredient.quantity;
-                            row.appendChild(quantityCell);
-
-                            ingredientList.appendChild(row);
-                        });
-
-                        // Show the ingredient details section
-                        document.getElementById('ingredientDetails').style.display = 'block';
-                    });
-            } else {
-                // Hide the ingredient details section
-                document.getElementById('ingredientDetails').style.display = 'none';
-            }
-        });
-    </script>
+@{
+    ViewData["Title"] = "Ingredient Page";
 }
+
+<h2>@ViewData["Title"]</h2>
+
+@using (Html.BeginForm("ActionName", "ControяllerName", FormMethod.Post, new { id = "ingredientForm" }))
+{
+    <div class="form-group">
+        <label for="productList">Select Product:</label>
+        @Html.DropDownList("ProductId", (SelectList)ViewData["Products"], new { @class = "form-control", id = "productList", onchange = "updateForm()" })
+    </div>
+
+    <div id="formContainer" style="display:none;">
+        <!-- Your form content goes here -->
+    </div>
+}
+
+<script>
+    function updateForm() {
+        var productId = $("#productList").val();
+
+        // Make an AJAX call to get the details for the selected product
+        $.get("/Ingredient/GetProductDetails?productId=" + productId, function (data) {
+            $("#formContainer").html(data);
+            $("#formContainer").show();
+        });
+    }
+</script>
+
+<a asp-action="Create" class="btn btn-primary">Create New Ingredient</a>

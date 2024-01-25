@@ -29,12 +29,19 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MeasurementUnit measurementUnit)
         {
-           
+            // Check if a MeasurementUnit with the same name already exists
+            if (_dbContext.MeasurementUnits.Any(mu => mu.Name == measurementUnit.Name))
+            {
+                ModelState.AddModelError("Name", "A MeasurementUnit with the same name already exists.");
+                return View(measurementUnit);
+            }
+
+            // If validation passes, continue with the creation of the MeasurementUnit
             _dbContext.MeasurementUnits.Add(measurementUnit);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-           
         }
+
 
         public async Task<IActionResult> Edit(int id)
         {

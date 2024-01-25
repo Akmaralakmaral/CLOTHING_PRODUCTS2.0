@@ -1,0 +1,22 @@
+﻿@model CLOTHING_PRODUCTS.Models.Ingredient
+
+<h2>Create New Ingredient</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="FinishedProductId">FinishedProduct</label>
+        <select asp-for="FinishedProductId" asp-items="@(new SelectList(ViewBag.FinishedProducts, "FinishedProductId", "Name"))" class="form-control" required></select>
+        <span asp-validation-for="FinishedProductId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RawMaterialId">RawMaterial</label>
+        <select asp-for="RawMaterialId" asp-items="@(new SelectList(ViewBag.RawMaterials, "RawMaterialId", "Name"))" class="form-control" required></select>
+        <span asp-validation-for="RawMaterialId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantity">Quantity</label>
+        <input asp-for="Quantity" class="form-control" required />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
