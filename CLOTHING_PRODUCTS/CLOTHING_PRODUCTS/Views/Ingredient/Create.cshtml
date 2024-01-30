@@ -3,9 +3,10 @@
 <h2>Create New Ingredient</h2>
 
 <form asp-action="Create">
+    
     <div class="form-group">
         <label asp-for="FinishedProductId">FinishedProduct</label>
-        <select asp-for="FinishedProductId" asp-items="@(new SelectList(ViewBag.FinishedProducts, "FinishedProductId", "Name"))" class="form-control" required></select>
+        <select asp-for="FinishedProductId" asp-items="@ViewBag.FinishedProducts" class="form-control" required></select>
         <span asp-validation-for="FinishedProductId" class="text-danger"></span>
     </div>
     <div class="form-group">

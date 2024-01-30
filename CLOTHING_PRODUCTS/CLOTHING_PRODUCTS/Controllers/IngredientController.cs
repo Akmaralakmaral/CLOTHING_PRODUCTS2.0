@@ -37,13 +37,12 @@ namespace CLOTHING_PRODUCTS.Controllers
             return PartialView("_ProductDetails", productDetails);
         }
 
-        public IActionResult Create(int? selectedFinishedProductId)
+        public IActionResult Create(int selectedProductId)
         {
-            ViewBag.FinishedProducts = _dbContext.FinishedProducts.ToList();
+           
             ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
-
-            // Set the selected value for FinishedProductId in ViewBag
-            ViewBag.SelectedFinishedProductId = selectedFinishedProductId;
+            var finishedProducts = _dbContext.FinishedProducts.ToList();
+            ViewBag.FinishedProducts = new SelectList(finishedProducts, "FinishedProductId", "Name", selectedProductId);
 
             return View();
         }
@@ -53,15 +52,30 @@ namespace CLOTHING_PRODUCTS.Controllers
         public async Task<IActionResult> Create(Ingredient ingredient)
         {
             // Check if an ingredient with the same FinishedProductId and RawMaterialId already exists
+            //if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
+            //{
+            //    ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to the selected Finished Product.");
+            //    ViewBag.FinishedProducts = _dbContext.FinishedProducts.ToList();
+            //    ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+            //    return View(ingredient);
+            //}
+
+            // If validation passes, continue with the creation of the ingredient
+            //_dbContext.Ingredients.Add(ingredient);
+            //await _dbContext.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
+
+            
+
             if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
             {
                 ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to the selected Finished Product.");
-                ViewBag.FinishedProducts = _dbContext.FinishedProducts.ToList();
                 ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+                var finishedProducts = _dbContext.FinishedProducts.ToList();
+                ViewBag.FinishedProducts = new SelectList(finishedProducts, "FinishedProductId", "Name", ingredient.FinishedProductId);
                 return View(ingredient);
             }
 
-            // If validation passes, continue with the creation of the ingredient
             _dbContext.Ingredients.Add(ingredient);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

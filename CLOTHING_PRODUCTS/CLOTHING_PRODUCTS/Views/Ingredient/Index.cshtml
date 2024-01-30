@@ -27,7 +27,29 @@
             $("#formContainer").html(data);
             $("#formContainer").show();
         });
+
+       
     }
 </script>
 
-<a asp-action="Create" class="btn btn-primary">Create New Ingredient</a>
+
+<script>
+    function updateForm() {
+        var productId = $("#productList").val();
+
+        // Make an AJAX call to get the details for the selected product
+        $.get("/Ingredient/GetProductDetails?productId=" + productId, function (data) {
+            $("#formContainer").html(data);
+            $("#formContainer").show();
+        });
+
+        // Set the selectedProductId in the URL for the Create action
+        var createUrl = "/Ingredient/Create?selectedProductId=" + productId;
+        $("a.btn.btn-primary").attr("href", createUrl);
+    }
+</script>
+
+
+@*<a asp-action="Create" class="btn btn-primary">Create New Ingredient</a>*@
+
+<a asp-action="Create" asp-route-selectedFinishedProductId="selectedProductId" class="btn btn-primary">Create New Ingredient</a>
