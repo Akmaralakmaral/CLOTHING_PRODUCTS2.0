@@ -16,8 +16,11 @@
     <div id="formContainer" style="display:none;">
         <!-- Your form content goes here -->
     </div>
+
+   
 }
 
+<button onclick="refreshPage()" class="btn btn-secondary">Refresh</button>
 <script>
     function updateForm() {
         var productId = $("#productList").val();
@@ -29,6 +32,10 @@
         });
 
        
+    }
+
+    function refreshPage() {
+        location.reload();
     }
 </script>
 

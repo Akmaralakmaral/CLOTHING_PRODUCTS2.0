@@ -10,5 +10,6 @@
 
         public virtual MeasurementUnit MeasurementUnit { get; set; }
         public virtual ICollection<Ingredient> Ingredients { get; set; }
+        //public ICollection<RawMaterial> RawMaterials { get; set; }
     }
 }

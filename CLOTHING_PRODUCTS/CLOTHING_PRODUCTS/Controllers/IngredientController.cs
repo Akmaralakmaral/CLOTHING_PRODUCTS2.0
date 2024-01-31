@@ -27,6 +27,9 @@ namespace CLOTHING_PRODUCTS.Controllers
         [HttpGet]
         public IActionResult GetProductDetails(int productId)
         {
+            ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+            //var rawMaterials = _dbContext.RawMaterials.ToList();
+            //ViewBag.RawMaterials = new SelectList(rawMaterials, "FinishedProductId", "Name", productId);
             // Retrieve the details for the selected product and pass it to the partial view
             var productDetails = _dbContext.Ingredients
                 .Where(e => e.FinishedProductId == productId)
@@ -51,22 +54,6 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Ingredient ingredient)
         {
-            // Check if an ingredient with the same FinishedProductId and RawMaterialId already exists
-            //if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
-            //{
-            //    ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to the selected Finished Product.");
-            //    ViewBag.FinishedProducts = _dbContext.FinishedProducts.ToList();
-            //    ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
-            //    return View(ingredient);
-            //}
-
-            // If validation passes, continue with the creation of the ingredient
-            //_dbContext.Ingredients.Add(ingredient);
-            //await _dbContext.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
-
-            
-
             if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
             {
                 ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to the selected Finished Product.");
@@ -81,22 +68,6 @@ namespace CLOTHING_PRODUCTS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-        [HttpPost]
-        public IActionResult EditQuantity(int ingredientId, int newQuantity)
-        {
-            var ingredient = _dbContext.Ingredients.Find(ingredientId);
-
-            if (ingredient != null)
-            {
-                ingredient.Quantity = newQuantity;
-                _dbContext.SaveChanges();
-                return Json(new { success = true });
-            }
-
-            return Json(new { success = false });
-        }
 
         [HttpPost]
         public IActionResult DeleteIngredient(int ingredientId)
@@ -114,6 +85,65 @@ namespace CLOTHING_PRODUCTS.Controllers
         }
 
 
+ 
+
+        public IActionResult EditIngredient(int id)
+        {
+            var ingredient = _dbContext.Ingredients
+                .Include(i => i.RawMaterial)
+                .Include(i => i.FinishedProduct) // Включаем завершенный продукт
+                .FirstOrDefault(i => i.IngredientId == id);
+
+            if (ingredient == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+            return View(ingredient);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditIngredient(Ingredient ingredient)
+        {
+            
+                try
+                {
+                
+                    if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
+                    {
+                        ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to another Finished Product.");
+                        // Повторно загружаем список сырья для представления
+                        ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+                        return View(ingredient);
+                    }
+
+                    // Если сырье не найдено в других продуктах, обновляем состояние ингредиента
+                    _dbContext.Entry(ingredient).State = EntityState.Modified;
+                    await _dbContext.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index)); // Перенаправление на метод Index
+
+            }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!IngredientExists(ingredient.IngredientId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            
+            
+        }
+
+        private bool IngredientExists(int id)
+        {
+            return _dbContext.Ingredients.Any(e => e.IngredientId == id);
+        }
 
     }
 }
