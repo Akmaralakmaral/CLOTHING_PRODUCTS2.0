@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLOTHING_PRODUCTS.Controllers
 {
-    
+
     public class IngredientController : Controller
     {
         private readonly AddDBContext _dbContext;
@@ -16,39 +16,52 @@ namespace CLOTHING_PRODUCTS.Controllers
             _dbContext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? productId)
         {
             var products = await _dbContext.FinishedProducts.ToListAsync();
             ViewData["Products"] = new SelectList(products, "FinishedProductId", "Name");
-            return View();
 
+            if (productId.HasValue)
+            {
+                ViewBag.SelectedProductId = productId;
+
+                var productDetails = await _dbContext.Ingredients
+                    .Where(e => e.FinishedProductId == productId)
+                    .Include(e => e.RawMaterial)
+                    .Include(e => e.FinishedProduct)
+                    .ToListAsync();
+
+                ViewBag.ProductDetails = productDetails;
+
+            }
+
+            return View();
         }
 
         [HttpGet]
-        public IActionResult GetProductDetails(int productId)
+        public async Task<IActionResult> GetProductDetails(int productId)
         {
             ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
-            //var rawMaterials = _dbContext.RawMaterials.ToList();
-            //ViewBag.RawMaterials = new SelectList(rawMaterials, "FinishedProductId", "Name", productId);
-            // Retrieve the details for the selected product and pass it to the partial view
-            var productDetails = _dbContext.Ingredients
+            var productDetails = await _dbContext.Ingredients
                 .Where(e => e.FinishedProductId == productId)
                 .Include(e => e.RawMaterial)
                 .Include(e => e.FinishedProduct)
-                .ToList();
+                .ToListAsync();
 
             return PartialView("_ProductDetails", productDetails);
         }
 
+
+
         public IActionResult Create(int selectedProductId)
         {
-           
             ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
             var finishedProducts = _dbContext.FinishedProducts.ToList();
             ViewBag.FinishedProducts = new SelectList(finishedProducts, "FinishedProductId", "Name", selectedProductId);
 
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -65,27 +78,18 @@ namespace CLOTHING_PRODUCTS.Controllers
 
             _dbContext.Ingredients.Add(ingredient);
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // Redirect to the Index action with the FinishedProductId
+            //return RedirectToAction(nameof(Index), new { productId = ingredient.FinishedProductId });
+            // Redirect to the Index action with the FinishedProductId of the new ingredient
+            return RedirectToAction(nameof(Index), new { productId = ingredient.FinishedProductId });
         }
 
 
-        [HttpPost]
-        public IActionResult DeleteIngredient(int ingredientId)
-        {
-            var ingredient = _dbContext.Ingredients.Find(ingredientId);
-
-            if (ingredient != null)
-            {
-                _dbContext.Ingredients.Remove(ingredient);
-                _dbContext.SaveChanges();
-                return Json(new { success = true });
-            }
-
-            return Json(new { success = false });
-        }
 
 
- 
+
+
 
         public IActionResult EditIngredient(int id)
         {
@@ -107,43 +111,90 @@ namespace CLOTHING_PRODUCTS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditIngredient(Ingredient ingredient)
         {
-            
-                try
-                {
-                
-                    if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
-                    {
-                        ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to another Finished Product.");
-                        // Повторно загружаем список сырья для представления
-                        ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
-                        return View(ingredient);
-                    }
 
-                    // Если сырье не найдено в других продуктах, обновляем состояние ингредиента
-                    _dbContext.Entry(ingredient).State = EntityState.Modified;
-                    await _dbContext.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); // Перенаправление на метод Index
+            try
+            {
+
+                //if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId))
+                //{
+                //    ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to another Finished Product.");
+                //    // Повторно загружаем список сырья для представления
+                //    ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+                //    return View(ingredient);
+                //}
+                if (_dbContext.Ingredients.Any(i => i.FinishedProductId == ingredient.FinishedProductId && i.RawMaterialId == ingredient.RawMaterialId && i.IngredientId != ingredient.IngredientId))
+                {
+                    ModelState.AddModelError("RawMaterialId", "This Raw Material is already assigned to another Finished Product.");
+                    // Повторно загружаем список сырья для представления
+                    ViewBag.RawMaterials = _dbContext.RawMaterials.ToList();
+                    return View(ingredient);
+                }
+
+                // Если сырье не найдено в других продуктах, обновляем состояние ингредиента
+                _dbContext.Entry(ingredient).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                /* return RedirectToAction(nameof(Index));*/ // Перенаправление на метод Index
+                return RedirectToAction(nameof(Index), new { productId = ingredient.FinishedProductId });
 
             }
-                catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IngredientExists(ingredient.IngredientId))
                 {
-                    if (!IngredientExists(ingredient.IngredientId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
-            
-            
+                else
+                {
+                    throw;
+                }
+            }
         }
+
+
 
         private bool IngredientExists(int id)
         {
             return _dbContext.Ingredients.Any(e => e.IngredientId == id);
         }
+
+
+        //[HttpPost]
+        //public IActionResult DeleteIngredient(int ingredientId)
+        //{
+        //    var ingredient = _dbContext.Ingredients.Find(ingredientId);
+
+        //    if (ingredient != null)
+        //    {
+        //        _dbContext.Ingredients.Remove(ingredient);
+        //        _dbContext.SaveChanges();
+        //        return Json(new { success = true });
+        //    }
+
+        //    return Json(new { success = false });
+        //}
+
+
+        [HttpPost]
+        public IActionResult DeleteIngredient(int ingredientId)
+        {
+            var ingredient = _dbContext.Ingredients.Find(ingredientId);
+
+            if (ingredient != null)
+            {
+                // Получаем productId перед удалением ингредиента
+                int productId = ingredient.FinishedProductId;
+
+                _dbContext.Ingredients.Remove(ingredient);
+                _dbContext.SaveChanges();
+
+                // После успешного удаления, выполните перенаправление на метод Index с указанным productId
+                return Json(new { success = true, productId = productId });
+            }
+
+            return Json(new { success = false });
+        }
+
+
 
     }
 }

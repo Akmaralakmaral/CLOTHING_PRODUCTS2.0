@@ -8,10 +8,10 @@
         public double Salary { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
-
-
         public int PositionId { get; set; }
+
         public virtual EmployeePosition PositionObject { get; set; }
+        public virtual ICollection<PurchaseRawMaterial> PurchaseRawMaterials { get; set; }
 
     }
 }

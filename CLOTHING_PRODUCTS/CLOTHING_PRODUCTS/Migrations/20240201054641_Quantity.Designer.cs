@@ -4,6 +4,7 @@ using CLOTHING_PRODUCTS.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLOTHING_PRODUCTS.Migrations
 {
     [DbContext(typeof(AddDBContext))]
-    partial class AddDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240201054641_Quantity")]
+    partial class Quantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,28 +24,6 @@ namespace CLOTHING_PRODUCTS.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CLOTHING_PRODUCTS.Models.Budget", b =>
-                {
-                    b.Property<int>("BudgetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BudgetId"));
-
-                    b.Property<double>("Bonus")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BudgetAmount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Percent")
-                        .HasColumnType("float");
-
-                    b.HasKey("BudgetId");
-
-                    b.ToTable("Budgets");
-                });
 
             modelBuilder.Entity("CLOTHING_PRODUCTS.Models.Employee", b =>
                 {
@@ -167,38 +148,6 @@ namespace CLOTHING_PRODUCTS.Migrations
                     b.HasKey("MeasurementUnitId");
 
                     b.ToTable("MeasurementUnits");
-                });
-
-            modelBuilder.Entity("CLOTHING_PRODUCTS.Models.PurchaseRawMaterial", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.Property<int>("RawMaterialID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("RawMaterialID");
-
-                    b.ToTable("PurchaseRawMaterials");
                 });
 
             modelBuilder.Entity("CLOTHING_PRODUCTS.Models.RawMaterial", b =>
@@ -468,25 +417,6 @@ namespace CLOTHING_PRODUCTS.Migrations
                     b.Navigation("RawMaterial");
                 });
 
-            modelBuilder.Entity("CLOTHING_PRODUCTS.Models.PurchaseRawMaterial", b =>
-                {
-                    b.HasOne("CLOTHING_PRODUCTS.Models.Employee", "Employee")
-                        .WithMany("PurchaseRawMaterials")
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CLOTHING_PRODUCTS.Models.RawMaterial", "RawMaterial")
-                        .WithMany("PurchaseRawMaterials")
-                        .HasForeignKey("RawMaterialID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("RawMaterial");
-                });
-
             modelBuilder.Entity("CLOTHING_PRODUCTS.Models.RawMaterial", b =>
                 {
                     b.HasOne("CLOTHING_PRODUCTS.Models.MeasurementUnit", "MeasurementUnit")
@@ -549,11 +479,6 @@ namespace CLOTHING_PRODUCTS.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CLOTHING_PRODUCTS.Models.Employee", b =>
-                {
-                    b.Navigation("PurchaseRawMaterials");
-                });
-
             modelBuilder.Entity("CLOTHING_PRODUCTS.Models.EmployeePosition", b =>
                 {
                     b.Navigation("Employees");
@@ -574,8 +499,6 @@ namespace CLOTHING_PRODUCTS.Migrations
             modelBuilder.Entity("CLOTHING_PRODUCTS.Models.RawMaterial", b =>
                 {
                     b.Navigation("Ingredients");
-
-                    b.Navigation("PurchaseRawMaterials");
                 });
 #pragma warning restore 612, 618
         }
