@@ -1,0 +1,38 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.Budget>
+
+@{
+    ViewData["Title"] = "Budget Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Budget</th>
+            <th>Percent</th>
+            <th>Bonus</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var budget in Model)
+        {
+            <tr>
+
+                <td>@budget.BudgetAmount</td>
+                <td>@budget.Percent</td>
+                <td>@budget.Bonus</td>
+                <td>
+                    <a asp-controller="Budget" asp-action="Edit" asp-route-id="@budget.BudgetId">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,30 @@
+﻿@model CLOTHING_PRODUCTS.Models.Budget
+
+@{
+    ViewData["Title"] = "Edit Budget";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" asp-route-id="@Model.BudgetId" method="post">
+    <div class="form-group">
+        <label asp-for="BudgetAmount" class="control-label"></label>
+        <input asp-for="BudgetAmount" class="form-control" />
+        <span asp-validation-for="BudgetAmount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Percent" class="control-label"></label>
+        <input asp-for="Percent" class="form-control" />
+        <span asp-validation-for="Percent" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Bonus" class="control-label"></label>
+        <input asp-for="Bonus" class="form-control" />
+        <span asp-validation-for="Bonus" class="text-danger"></span>
+    </div>
+  
+    <div>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+    
+</form>
