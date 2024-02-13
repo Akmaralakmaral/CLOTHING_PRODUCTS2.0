@@ -19,6 +19,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<PurchaseRawMaterial> PurchaseRawMaterials { get; set; }
+        public DbSet<SaleProduct> SaleProducts { get; set; }
 
 
 
@@ -75,6 +76,18 @@ namespace CLOTHING_PRODUCTS.Context
             modelBuilder.Entity<PurchaseRawMaterial>()
                 .HasOne(prm => prm.Employee)
                 .WithMany(e => e.PurchaseRawMaterials)
+                .HasForeignKey(prm => prm.EmployeeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SaleProduct>()
+                .HasOne(prm => prm.FinishedProduct)
+                .WithMany(rm => rm.SaleProducts)
+                .HasForeignKey(prm => prm.FinishedProductID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SaleProduct>()
+                .HasOne(prm => prm.Employee)
+                .WithMany(e => e.SaleProducts)
                 .HasForeignKey(prm => prm.EmployeeID)
                 .OnDelete(DeleteBehavior.Restrict);
         }

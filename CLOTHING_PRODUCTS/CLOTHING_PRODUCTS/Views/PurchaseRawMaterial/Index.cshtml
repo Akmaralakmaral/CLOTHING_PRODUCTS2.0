@@ -15,7 +15,7 @@
             <th>Amount</th>
             <th>Date</th>
             <th>Employee</th>
-            <th>Actions</th>
+           @* <th>Actions</th>*@
         </tr>
     </thead>
     <tbody>
@@ -28,12 +28,12 @@
                 <td>@rawMaterial.Amount</td>
                 <td>@rawMaterial.Date</td>
                 <td>@rawMaterial.Employee.FullName</td>
-                <td>
+                @*<td>
                     <a asp-controller="PurchaseRawMaterial" asp-action="Edit" asp-route-id="@rawMaterial.ID">Edit</a> |
                     <form asp-action="Delete" asp-route-id="@rawMaterial.ID" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
                         <button type="submit" class="btn-link">Delete</button>
                     </form>
-                </td>
+                </td>*@
             </tr>
         }
     </tbody>

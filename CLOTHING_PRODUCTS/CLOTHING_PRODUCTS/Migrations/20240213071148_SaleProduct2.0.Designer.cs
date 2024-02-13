@@ -4,6 +4,7 @@ using CLOTHING_PRODUCTS.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CLOTHING_PRODUCTS.Migrations
 {
     [DbContext(typeof(AddDBContext))]
-    partial class AddDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240213071148_SaleProduct2.0")]
+    partial class SaleProduct20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

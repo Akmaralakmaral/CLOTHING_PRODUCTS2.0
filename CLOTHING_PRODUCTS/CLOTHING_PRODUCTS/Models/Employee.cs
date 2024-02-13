@@ -12,6 +12,7 @@
 
         public virtual EmployeePosition PositionObject { get; set; }
         public virtual ICollection<PurchaseRawMaterial> PurchaseRawMaterials { get; set; }
+        public virtual ICollection<SaleProduct> SaleProducts { get; set; }
 
     }
 }
