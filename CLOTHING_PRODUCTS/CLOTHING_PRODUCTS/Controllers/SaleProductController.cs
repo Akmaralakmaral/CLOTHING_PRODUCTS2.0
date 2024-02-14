@@ -65,19 +65,18 @@ namespace CLOTHING_PRODUCTS.Controllers
             }
 
             
-            finishedProduct.Quantity -= saleProduct.Quantity;
+           
 
             var budget = await _dbContext.Budgets.FirstOrDefaultAsync();
 
-            
-            var saleAmount = saleProduct.Quantity * (finishedProduct.Amount / finishedProduct.Quantity) *
-                                ((budget.Percent) / 100);
+            var sebestiomost = (saleProduct.Quantity * (finishedProduct.Amount / finishedProduct.Quantity));
+            var saleAmount = sebestiomost *( ((budget.Percent) / 100)+1);
 
             
             budget.BudgetAmount += saleAmount;
             saleProduct.Amount = saleAmount;
-            finishedProduct.Amount -= saleProduct.Amount;
-            
+            finishedProduct.Amount -= sebestiomost;
+            finishedProduct.Quantity -= saleProduct.Quantity;
             _dbContext.Add(saleProduct);
 
             
@@ -86,9 +85,5 @@ namespace CLOTHING_PRODUCTS.Controllers
             return RedirectToAction(nameof(Index));
           
         }
-
-
-
-
     }
 }
