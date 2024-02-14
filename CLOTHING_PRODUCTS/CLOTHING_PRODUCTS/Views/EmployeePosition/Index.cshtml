@@ -27,12 +27,24 @@
             <tr>
                 
                 <td>@position.Title</td>
-                <td>
+                @*<td>
                     <a asp-controller="EmployeePosition" asp-action="Edit" asp-route-id="@position.EmployeePositionId">Edit</a> |
                    <form asp-action="Delete" asp-route-id="@position.EmployeePositionId" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
                         <button type="submit" class="btn-link">Delete</button>
                     </form>
+                </td>*@
+
+                <td>
+                    <div style="display: inline-block;">
+                        <a asp-controller="EmployeePosition" asp-action="Edit" asp-route-id="@position.EmployeePositionId" class="btn btn-warning">Edit</a> |
+                    </div>
+                    <div style="display: inline-block;">
+                        <form asp-action="Delete" asp-route-id="@position.EmployeePositionId" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
                 </td>
+
             </tr>
         }
     </tbody>
