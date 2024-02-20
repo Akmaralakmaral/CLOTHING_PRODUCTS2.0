@@ -1,0 +1,40 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.ProductManufacturing>
+
+@{
+    ViewData["Title"] = "ProductManufacturing Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+<a asp-action="Create" class="btn btn-primary">Make a product</a>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>FinishedProduct</th>
+            <th>Quantity</th>
+            
+            <th>Date</th>
+            <th>Employee</th>
+            @* <th>Actions</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var saleProduct in Model)
+        {
+            <tr>
+
+                <td>@saleProduct.FinishedProduct.Name</td>
+                <td>@saleProduct.Quantity</td>
+                
+                <td>@saleProduct.Date</td>
+                <td>@saleProduct.Employee.FullName</td>
+                @*<td>
+            <a asp-controller="PurchaseRawMaterial" asp-action="Edit" asp-route-id="@rawMaterial.ID">Edit</a> |
+            <form asp-action="Delete" asp-route-id="@rawMaterial.ID" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+            <button type="submit" class="btn-link">Delete</button>
+            </form>
+            </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

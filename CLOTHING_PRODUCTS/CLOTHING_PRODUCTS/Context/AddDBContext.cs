@@ -20,7 +20,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<PurchaseRawMaterial> PurchaseRawMaterials { get; set; }
         public DbSet<SaleProduct> SaleProducts { get; set; }
-
+        public DbSet<ProductManufacturing> ProductManufacturings { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -88,6 +88,18 @@ namespace CLOTHING_PRODUCTS.Context
             modelBuilder.Entity<SaleProduct>()
                 .HasOne(prm => prm.Employee)
                 .WithMany(e => e.SaleProducts)
+                .HasForeignKey(prm => prm.EmployeeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductManufacturing>()
+                .HasOne(prm => prm.FinishedProduct)
+                .WithMany(rm => rm.ProductManufacturings)
+                .HasForeignKey(prm => prm.FinishedProductID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductManufacturing>()
+                .HasOne(prm => prm.Employee)
+                .WithMany(e => e.ProductManufacturings)
                 .HasForeignKey(prm => prm.EmployeeID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
