@@ -72,9 +72,9 @@ namespace CLOTHING_PRODUCTS.Controllers
                 return NotFound();
             }
 
-            // Загрузка существующих значений Quantity и Amount
-            editedFinishedProduct.Quantity = existingFinishedProduct.Quantity;
-            editedFinishedProduct.Amount = existingFinishedProduct.Amount;
+            //// Загрузка существующих значений Quantity и Amount
+            //editedFinishedProduct.Quantity = existingFinishedProduct.Quantity;
+            //editedFinishedProduct.Amount = existingFinishedProduct.Amount;
 
             // Применение изменений и сохранение
             _dbContext.Entry(existingFinishedProduct).CurrentValues.SetValues(editedFinishedProduct);

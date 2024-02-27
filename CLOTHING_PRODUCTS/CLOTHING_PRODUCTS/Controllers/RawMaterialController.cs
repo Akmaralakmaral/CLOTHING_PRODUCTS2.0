@@ -73,9 +73,9 @@ namespace CLOTHING_PRODUCTS.Controllers
                 return NotFound();
             }
 
-            // Загрузка существующих значений Quantity и Amount
-            editedRawMaterial.Quantity = existingRawMaterial.Quantity;
-            editedRawMaterial.Amount = existingRawMaterial.Amount;
+            //// Загрузка существующих значений Quantity и Amount
+            //editedRawMaterial.Quantity = existingRawMaterial.Quantity;
+            //editedRawMaterial.Amount = existingRawMaterial.Amount;
 
             // Применение изменений и сохранение
             _dbContext.Entry(existingRawMaterial).CurrentValues.SetValues(editedRawMaterial);

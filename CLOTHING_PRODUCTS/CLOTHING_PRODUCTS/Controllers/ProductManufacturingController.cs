@@ -1,4 +1,5 @@
 ﻿using CLOTHING_PRODUCTS.Context;
+using CLOTHING_PRODUCTS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -29,5 +30,66 @@ namespace CLOTHING_PRODUCTS.Controllers
             ViewBag.Employees = new SelectList(_dbContext.Employees, "EmployeeId", "FullName");
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductManufacturing productManufacturing)
+        {
+           
+            var finishedProduct = await _dbContext.FinishedProducts
+                .Include(fp => fp.Ingredients)
+                .FirstOrDefaultAsync(fp => fp.FinishedProductId == productManufacturing.FinishedProductID);
+
+            // Проверка на наличие продукта
+            if (finishedProduct == null)
+            {
+                ModelState.AddModelError(string.Empty, "Выбранный продукт не найден");
+                return View(productManufacturing);
+            }
+
+            // Проверка на наличие необходимого сырья
+            foreach (var ingredient in finishedProduct.Ingredients)
+            {
+                var rawMaterial = await _dbContext.RawMaterials.FindAsync(ingredient.RawMaterialId);
+                if (rawMaterial.Quantity < ingredient.Quantity * productManufacturing.Quantity)
+                {
+                    ModelState.AddModelError(string.Empty, $"Недостаточно сырья: {rawMaterial.Name}");
+                    ViewBag.FinishedProducts = new SelectList(_dbContext.FinishedProducts, "FinishedProductId", "Name", productManufacturing.FinishedProductID);
+                    ViewBag.Employees = new SelectList(_dbContext.Employees, "EmployeeId", "FullName", productManufacturing.EmployeeID);
+                    return View(productManufacturing);
+                }   
+            }
+            double productAmount = 0;
+            // Вычитание необходимого сырья
+            foreach (var ingredient in finishedProduct.Ingredients)
+            {
+                var rawMaterial = await _dbContext.RawMaterials.FindAsync(ingredient.RawMaterialId);
+                double rawMaterialQuantity = ingredient.Quantity * productManufacturing.Quantity;
+                double rawMaterialAmount = (rawMaterial.Amount / rawMaterial.Quantity)*(rawMaterialQuantity);
+                
+                rawMaterial.Amount -= rawMaterialAmount;
+                rawMaterial.Quantity -= rawMaterialQuantity;
+                productAmount = productAmount + rawMaterialAmount;
+
+            }
+
+            // Увеличение количества продукции на складе
+            finishedProduct.Quantity += productManufacturing.Quantity;
+            finishedProduct.Amount += productAmount; // Предполагая, что стоимость увеличивается на сумму всех сырья
+
+            // Создание записи о производстве продукта
+            _dbContext.ProductManufacturings.Add(productManufacturing);
+
+            // Сохранение изменений в базе данных
+            await _dbContext.SaveChangesAsync();
+
+                
+            
+
+            ViewBag.FinishedProducts = new SelectList(_dbContext.FinishedProducts, "FinishedProductId", "Name", productManufacturing.FinishedProductID);
+            ViewBag.Employees = new SelectList(_dbContext.Employees, "EmployeeId", "FullName", productManufacturing.EmployeeID);
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
