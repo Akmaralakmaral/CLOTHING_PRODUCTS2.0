@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CLOTHING_PRODUCTS.Models.Salary>
+
+@{
+    ViewData["Title"] = "Salary Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@using System.Globalization
+<form asp-controller="Salary" asp-action="FilterSalaries" method="post">
+    <div>
+        <label for="selectedYear">Select Year:</label>
+        <select id="selectedYear" name="selectedYear" asp-items="ViewBag.Years" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+        </select>
+
+        <label for="selectedMonth">Select Month:</label>
+        <select id="selectedMonth" name="selectedMonth" asp-items="ViewBag.Months" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+        </select>
+    </div>
+</form>
+
+<a asp-action="Create" class="btn btn-primary">Make a salary</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Month</th>
+            <th>Year</th>
+            <th>Purchase Count</th>
+            <th>Product Count</th>
+            <th>Sales Count</th>
+            <th>Common Count</th>
+            <th>Salary Amount</th>
+            <th>Bonus</th>
+            <th>General</th>
+            <th>Issued</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var salary in Model)
+        {
+            <tr>
+                <td>@salary.Employee.FullName</td>
+                <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(salary.Month)</td>
+                <td>@salary.Year</td>
+                <td>@salary.PurchaseCount</td>
+                <td>@salary.ProductCount</td>
+                <td>@salary.SalesCount</td>
+                <td>@salary.CommonCount</td>
+                <td>@salary.SalaryAmount</td>
+                <td>@salary.Bonus</td>
+                <td>@salary.General</td>
+                <td>
+                    @if (salary.Issued == 1)
+                    {
+                        <input type="checkbox" checked disabled />
+                    }
+                    else
+                    {
+                        <input type="checkbox" disabled />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -15,5 +15,7 @@
         public virtual ICollection<SaleProduct> SaleProducts { get; set; }
         public virtual ICollection<ProductManufacturing> ProductManufacturings { get; set; }
 
+        public virtual ICollection<Salary> Salaries { get; set; }
+
     }
 }

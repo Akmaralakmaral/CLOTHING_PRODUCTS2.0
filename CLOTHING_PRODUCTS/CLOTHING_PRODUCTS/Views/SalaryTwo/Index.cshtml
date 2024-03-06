@@ -1,0 +1,103 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.Salary>
+@inject CLOTHING_PRODUCTS.Context.AddDBContext _context
+@{
+    ViewData["Title"] = "Salary Page";
+    string[] monthNames = new string[]
+    {
+        "", // Пустая строка для нулевого месяца (если нужно)
+        "январь", "февраль", "март", "апрель", "май", "июнь",
+        "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"
+    };
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="SalaryTwo" asp-action="Index" method="get">
+   @* <div>
+        @Html.DropDownList("selectedYear", ViewData["Years"] as SelectList, "All Years", new { onchange = "this.form.submit();" })
+    </div>*@
+    <div>
+    @Html.DropDownList("selectedYear", ViewData["Years"] as SelectList, "Years", new { onchange = "this.form.submit();" })
+    </div>
+    <div>
+        <label>Month:</label>
+        @Html.DropDownList("selectedMonth", ViewData["Months"] as SelectList, "Months", new { onchange = "this.form.submit();" })
+    </div>
+
+    <div>
+        <a class="btn btn-primary" asp-controller="SalaryTwo" asp-action="IssuedAll" asp-route-selectedYear="@ViewData["SelectedYear"]" asp-route-selectedMonth="@ViewData["SelectedMonth"]">Issued All</a>
+    </div>
+    <div>
+        <strong>Total General for the selected month and year: @Model.Where(s => s.Issued == 0).Sum(s => s.General)</strong>
+    </div>
+    
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+           @* <th>ID</th>
+            <th>Year</th>
+            <th>Month</th>*@
+            <th>EmployeeName</th>
+            <th>PurchaseCount</th>
+            <th>ProductCount</th>
+            <th>SalesCount</th>
+            <th>CommonCount</th>
+            <th>SalaryAmount</th>
+            <th>Bonus</th>
+            <th>General</th>
+            <th>Issued</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var salary in Model)
+        {
+            <tr>
+                @*<td>@salary.ID</td>
+                <td>@salary.Year</td>
+                <td>@monthNames[salary.Month]</td>*@
+                <td>
+                    @{
+                        var employee = await _context.Employees.FindAsync(salary.EmployeeID);
+                        if (employee != null)
+                        {
+                            <text>@employee.FullName</text>
+                        }
+                        else
+                        {
+                            <text>Unknown Employee</text>
+                        }
+                    }
+                </td>
+                <td>@salary.PurchaseCount</td>
+                <td>@salary.ProductCount</td>
+                <td>@salary.SalesCount</td>
+                <td>@salary.CommonCount</td>
+                <td>@salary.SalaryAmount</td>
+                <td>@salary.Bonus</td>
+                <td>@salary.General</td>
+                <td>@(salary.Issued == 1 ? "Issued" : "Not Issued")</td>
+                <td>
+                    @if (salary.Issued == 1)
+                    {
+                        <span class="btn btn-secondary disabled">Edit</span>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" asp-controller="SalaryTwo" asp-action="Edit" asp-route-id="@salary.ID">Edit</a>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

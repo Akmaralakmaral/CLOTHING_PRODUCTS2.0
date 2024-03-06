@@ -21,6 +21,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<PurchaseRawMaterial> PurchaseRawMaterials { get; set; }
         public DbSet<SaleProduct> SaleProducts { get; set; }
         public DbSet<ProductManufacturing> ProductManufacturings { get; set; }
+        public DbSet<Salary> Salaries { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -101,6 +102,12 @@ namespace CLOTHING_PRODUCTS.Context
                 .HasOne(prm => prm.Employee)
                 .WithMany(e => e.ProductManufacturings)
                 .HasForeignKey(prm => prm.EmployeeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Salary>()
+                .HasOne(s => s.Employee)
+                .WithMany(e => e.Salaries)
+                .HasForeignKey(s => s.EmployeeID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
