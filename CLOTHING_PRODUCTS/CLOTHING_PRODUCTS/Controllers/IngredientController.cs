@@ -86,11 +86,6 @@ namespace CLOTHING_PRODUCTS.Controllers
         }
 
 
-
-
-
-
-
         public IActionResult EditIngredient(int id)
         {
             var ingredient = _dbContext.Ingredients

@@ -1,0 +1,57 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.FinishedProduct>
+
+<h2>Select Product</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        <label for="productId">Choose a product:</label>
+        <select class="form-control" name="productId" id="productIdSelect" onchange="this.form.submit()">
+            <option value="">Select Product</option>
+            @foreach (var product in Model)
+            {
+                <option value="@product.FinishedProductId">@product.Name</option>
+            }
+        </select>
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var productIdSelect = document.getElementById("productIdSelect");
+        var selectedProductId = @Html.Raw(Json.Serialize(ViewData["SelectedProductId"])); // Получаем выбранный productId из ViewData
+
+        // Устанавливаем выбранный элемент
+        if (selectedProductId !== null) {
+            productIdSelect.value = selectedProductId;
+        }
+    });
+</script>
+
+@if (ViewData["Ingredients"] != null && ((List<CLOTHING_PRODUCTS.Models.Ingredient>)ViewData["Ingredients"]).Count > 0)
+{
+    <h3>Ingredients for Selected Product</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ingredient ID</th>
+                <th>Finished Product ID</th>
+                <th>Raw Material ID</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ingredient in ViewData["Ingredients"] as List<CLOTHING_PRODUCTS.Models.Ingredient>)
+            {
+                <tr>
+                    <td>@ingredient.IngredientId</td>
+                    <td>@ingredient.FinishedProductId</td>
+                    <td>@ingredient.RawMaterialName</td>
+                    <td>@ingredient.Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a class="btn btn-primary" asp-controller="KURSOVAYAIngredient" asp-action="CreateIngredientForm" asp-route-productId="@ViewData["SelectedProductId"]">Create Ingredient</a>

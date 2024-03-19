@@ -1,0 +1,37 @@
+﻿@model int
+
+<h2>Create Ingredient</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@using (Html.BeginForm("CreateIngredientForm", "KURSOVAYAIngredient", FormMethod.Post))
+{
+    <div class="form-group">
+        <label for="productName">Product Name:</label>
+        <input type="text" class="form-control" id="productName" value="@ViewBag.ProductName" readonly>
+    </div>
+    <div class="form-group">
+        <label for="rawMaterialId">Raw Material:</label>
+        <select class="form-control" name="rawMaterialId" id="rawMaterialId">
+            <option value="">Select Raw Material</option>
+            @foreach (var rawMaterial in ViewBag.RawMaterials)
+            {
+                <option value="@rawMaterial.RawMaterialId">@rawMaterial.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" class="form-control" name="quantity" id="quantity" step="0.01" required>
+    </div>
+
+    <!-- Скрытое поле для передачи значения productId -->
+    <input type="hidden" name="productId" value="@ViewBag.ProductId">
+
+    <button type="submit" class="btn btn-primary">Create Ingredient</button>
+}
