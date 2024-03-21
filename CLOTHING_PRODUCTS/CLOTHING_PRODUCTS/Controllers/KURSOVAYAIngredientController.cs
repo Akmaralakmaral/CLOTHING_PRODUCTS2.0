@@ -70,7 +70,7 @@ namespace CLOTHING_PRODUCTS.Controllers
 
 
         // GET: Отобразить форму для создания ингредиента
-        public IActionResult CreateIngredientForm(int productId, int? rawMaterialId = null, double? quantity = null)
+        public IActionResult CreateIngredientForm(int productId, int? rawMaterialId = null, float? quantity = null)
         {
             // Получаем название выбранного продукта по его ID
             var productName = _dbContext.FinishedProducts
@@ -92,7 +92,7 @@ namespace CLOTHING_PRODUCTS.Controllers
 
         // POST: Создать ингредиент
         [HttpPost]
-        public IActionResult CreateIngredientForm(int productId, int rawMaterialId, double quantity)
+        public IActionResult CreateIngredientForm(int productId, int rawMaterialId, float quantity)
         {
             var rowsAffected = _dbContext.Database.ExecuteSqlInterpolated($"EXEC CreateIngredient {productId}, {rawMaterialId}, {quantity}");
 
@@ -107,7 +107,60 @@ namespace CLOTHING_PRODUCTS.Controllers
             return RedirectToAction("Index", "KURSOVAYAIngredient", new { productId = productId });
         }
 
+        // GET: Отобразить форму для редактирования ингредиента
+        public IActionResult EditIngredient(int ingredientId)
+        {
+            // Получаем информацию об ингредиенте по его ID
+            var ingredient = _dbContext.Ingredients
+                .FromSqlRaw($"EXEC GetIngredientById {ingredientId}")
+                .AsEnumerable()
+                .FirstOrDefault();
 
+            // Получаем название материала по его ID
+            var rawMaterial = _dbContext.RawMaterials
+                .FirstOrDefault(r => r.RawMaterialId == ingredient.RawMaterialId);
+
+            // Устанавливаем название материала в свойство RawMaterialName
+            ingredient.RawMaterialName = rawMaterial.Name;
+            // Получаем список сырья из хранимой процедуры
+            var rawMaterials = _dbContext.RawMaterials.FromSqlRaw("EXEC GetRawMaterials").ToList();
+
+            ViewBag.RawMaterials = rawMaterials;
+            ViewBag.IngredientId = ingredientId; // Передаем значение ingredientId в представление
+
+                
+
+            return View(ingredient);
+        }
+
+        // POST: Обновить ингредиент
+        [HttpPost]
+        public IActionResult EditIngredient(int ingredientId, int newRawMaterialId, float quantity, int productId)
+        {
+            // Вызываем хранимую процедуру EditIngredient для обновления ингредиента
+            var rowsAffected = _dbContext.Database.ExecuteSqlInterpolated($"EXEC EditIngredient {ingredientId}, {newRawMaterialId}, {quantity}, {productId}");
+
+            if (rowsAffected == -1)
+            {
+                TempData["ErrorMessage"] = "Another ingredient with the same product and raw material already exists.";
+                // Перенаправляем пользователя на GET метод для отображения формы редактирования с сообщением об ошибке и передаем введенные значения
+                return RedirectToAction("EditIngredient", new { ingredientId = ingredientId });
+            }
+
+            // Иначе, если ингредиент успешно обновлен, перенаправляем пользователя на Index
+            return RedirectToAction("Index", "KURSOVAYAIngredient", new { productId = productId });
+        }
+
+        // POST: Удалить ингредиент
+        [HttpPost]
+        public IActionResult DeleteIngredient(int ingredientId)
+        {
+            // Вызываем хранимую процедуру DeleteIngredient для удаления ингредиента
+            _dbContext.Database.ExecuteSqlInterpolated($"EXEC DeleteIngredient {ingredientId}");
+
+            // Перенаправляем пользователя на Index
+            return RedirectToAction("Index", "KURSOVAYAIngredient");
+        }
 
     }
 }

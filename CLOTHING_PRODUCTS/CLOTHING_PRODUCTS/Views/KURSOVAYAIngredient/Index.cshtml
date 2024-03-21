@@ -34,20 +34,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Ingredient ID</th>
-                <th>Finished Product ID</th>
-                <th>Raw Material ID</th>
+                
+                <th>Raw Material</th>
                 <th>Quantity</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var ingredient in ViewData["Ingredients"] as List<CLOTHING_PRODUCTS.Models.Ingredient>)
             {
                 <tr>
-                    <td>@ingredient.IngredientId</td>
-                    <td>@ingredient.FinishedProductId</td>
+                    
                     <td>@ingredient.RawMaterialName</td>
-                    <td>@ingredient.Quantity</td>
+                    <td>@ingredient.Quantity.ToString("0.00")</td>
+                    <td>
+                        <div style="display: inline-block;">
+                            <a asp-controller="KURSOVAYAIngredient" asp-action="EditIngredient" asp-route-ingredientId="@ingredient.IngredientId" class="btn btn-warning">Edit</a> | 
+                        </div>
+                        <form asp-action="DeleteIngredient" method="post" style="display:inline;">
+                            <input type="hidden" name="ingredientId" value="@ingredient.IngredientId" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this ingredient?')">Delete</button>
+                        </form>
+                    </td>
+                    
                 </tr>
             }
         </tbody>

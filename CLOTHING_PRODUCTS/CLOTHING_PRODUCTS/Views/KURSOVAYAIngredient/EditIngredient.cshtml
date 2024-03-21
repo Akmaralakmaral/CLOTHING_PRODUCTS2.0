@@ -1,0 +1,57 @@
+﻿@model CLOTHING_PRODUCTS.Models.Ingredient
+
+<h2>Edit Ingredient</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@using (Html.BeginForm("EditIngredient", "KURSOVAYAIngredient", FormMethod.Post))
+{
+    <div class="form-group">
+        <label for="rawMaterialId">Raw Material:</label>
+        <select class="form-control" name="newRawMaterialId" id="newRawMaterialId">
+           
+            @foreach (var rawMaterial in ViewBag.RawMaterials)
+            {
+                <option value="@rawMaterial.RawMaterialId">@rawMaterial.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="text" class="form-control" name="quantity" id="quantity" step="0.01" value="@Model.Quantity.ToString("0.##")" required>
+
+    </div>
+
+    <!-- Скрытое поле для передачи значения ingredientId -->
+    <input type="hidden" name="ingredientId" value="@ViewBag.IngredientId">
+    <!-- Скрытое поле для передачи значения productId -->
+    <input type="hidden" name="productId" value="@Model.FinishedProductId">
+
+    <button type="submit" class="btn btn-primary">Update Ingredient</button>
+}
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var newRawMaterialId = @Model.RawMaterialId;
+        var quantity = @Model.Quantity; // Добавляем эту строку для получения значения quantity
+        var selectElement = document.getElementById("newRawMaterialId");
+        var quantityElement = document.getElementById("quantity"); // Получаем элемент quantity
+
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == newRawMaterialId) {
+                selectElement.options[i].selected = true;
+                break;
+            }
+        }
+
+        // Устанавливаем значение quantity
+        quantityElement.value = quantity;
+    });
+</script>
