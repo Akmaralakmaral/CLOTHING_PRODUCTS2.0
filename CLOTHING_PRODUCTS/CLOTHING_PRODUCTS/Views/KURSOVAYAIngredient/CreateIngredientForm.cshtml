@@ -27,7 +27,7 @@
     </div>
     <div class="form-group">
         <label for="quantity">Quantity:</label>
-        <input type="number" class="form-control" name="quantity" id="quantity" step="0.01" required>
+        <input type="number" class="form-control" name="quantity" id="quantity" step="0.01" required value="@ViewBag.Quantity">
     </div>
 
     <!-- Скрытое поле для передачи значения productId -->
@@ -35,3 +35,17 @@
 
     <button type="submit" class="btn btn-primary">Create Ingredient</button>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var rawMaterialId = @ViewBag.RawMaterialId;
+        var selectElement = document.getElementById("rawMaterialId");
+
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == rawMaterialId) {
+                selectElement.options[i].selected = true;
+                break;
+            }
+        }
+    });
+</script>
