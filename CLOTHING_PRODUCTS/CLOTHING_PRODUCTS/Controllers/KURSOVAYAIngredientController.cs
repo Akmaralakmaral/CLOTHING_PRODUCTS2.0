@@ -32,7 +32,7 @@ namespace CLOTHING_PRODUCTS.Controllers
                 // Если передан productId, вызываем хранимую процедуру для получения ингредиентов для выбранного продукта
                 ingredients = await _dbContext.Ingredients
                     .FromSqlRaw("EXEC GetIngredientsByProductId @ProductId", new SqlParameter("@ProductId", productId))
-                    .ToListAsync();
+                    .ToListAsync(); 
             }
 
             // Помещаем список ингредиентов в ViewData для передачи в представление

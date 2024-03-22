@@ -1,0 +1,27 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.ProductManufacturing>
+
+<h2>Product Manufacturings</h2>
+<a asp-action="Create" class="btn btn-primary">Create</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Finished Product Name</th>
+            <th>Quantity</th>
+            <th>Date</th>
+            <th>Employee Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.FinishedProductName</td>
+                <td>@item.Quantity</td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.EmployeeName</td>
+            </tr>
+        }
+    </tbody>
+</table>
