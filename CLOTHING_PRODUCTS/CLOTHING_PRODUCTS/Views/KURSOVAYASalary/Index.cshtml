@@ -1,0 +1,111 @@
+﻿@model IEnumerable<CLOTHING_PRODUCTS.Models.Salary>
+
+@{
+    ViewData["Title"] = "Salary Information";
+}
+
+<h1>Salary Information</h1>
+
+<form asp-controller="KURSOVAYASalary" asp-action="Index" method="get" id="salaryForm">
+    <div>
+        <label>Select Year:</label>
+        <select name="year">
+            <option value="">-- Select Year --</option>
+            @foreach (var year in ViewBag.Years)
+            {
+                <option value="@year">@year</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label>Select Month:</label>
+        <select name="month">
+            <option value="">-- Select Month --</option>
+            @foreach (var month in ViewBag.Months)
+            {
+                <option value="@month.Id">@month.Name</option>
+            }
+        </select>
+    </div>
+    <div>
+        @if (ViewBag.TotalGeneral != null)
+        {
+            <label>Total General:</label>
+            <span>@ViewBag.TotalGeneral</span>
+        }
+</div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Employee ID</th>
+            <th>Purchase Count</th>
+            <th>Product Count</th>
+            <th>Sales Count</th>
+            <th>Common Count</th>
+            <th>Salary Amount</th>
+            <th>Bonus</th>
+            <th>General</th>
+            <th>Issued</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.Year</td>
+                <td>@item.Month</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.PurchaseCount</td>
+                <td>@item.ProductCount</td>
+                <td>@item.SalesCount</td>
+                <td>@item.CommonCount</td>
+                <td>@item.SalaryAmount</td>
+                <td>@item.Bonus</td>
+                <td>@item.General</td>
+                <td>@item.Issued</td>
+                <td>
+                    <a asp-action="EditGeneral" asp-route-id="@item.ID" class="btn btn-primary">Edit</a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    // Получаем ссылку на форму
+    var form = document.getElementById('salaryForm');
+
+    // Получаем ссылки на выпадающие списки
+    var yearDropdown = form.querySelector('select[name="year"]');
+    var monthDropdown = form.querySelector('select[name="month"]');
+
+    // Устанавливаем обработчики событий для изменения значения в выпадающих списках
+    yearDropdown.addEventListener('change', function () {
+        form.submit(); // Отправляем форму при изменении значения года
+    });
+
+    monthDropdown.addEventListener('change', function () {
+        form.submit(); // Отправляем форму при изменении значения месяца
+    });
+
+    // При загрузке страницы восстановим выбранные значения из URL, если они есть
+    window.onload = function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var selectedYear = urlParams.get('year');
+        var selectedMonth = urlParams.get('month');
+
+        if (selectedYear !== null) {
+            yearDropdown.value = selectedYear;
+        }
+
+        if (selectedMonth !== null) {
+            monthDropdown.value = selectedMonth;
+        }
+    };
+</script>

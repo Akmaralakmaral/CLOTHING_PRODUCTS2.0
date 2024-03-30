@@ -1,6 +1,7 @@
 ﻿using CLOTHING_PRODUCTS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CLOTHING_PRODUCTS.Context
 {
@@ -22,7 +23,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<SaleProduct> SaleProducts { get; set; }
         public DbSet<ProductManufacturing> ProductManufacturings { get; set; }
         public DbSet<Salary> Salaries { get; set; }
-
+        public DbSet<Month> Months { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

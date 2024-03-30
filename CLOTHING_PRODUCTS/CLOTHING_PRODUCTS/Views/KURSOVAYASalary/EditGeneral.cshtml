@@ -9,6 +9,8 @@
 <form asp-action="EditGeneral">
     <div class="form-group">
         <input type="hidden" asp-for="ID" />
+        <input type="hidden" name="year" value="@ViewBag.Year" />
+        <input type="hidden" name="month" value="@ViewBag.Month" />
         <label asp-for="General" class="control-label"></label>
         <input asp-for="General" class="form-control" />
         <span asp-validation-for="General" class="text-danger"></span>

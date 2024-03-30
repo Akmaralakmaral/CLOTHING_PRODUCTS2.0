@@ -43,9 +43,9 @@
 <table class="table">
     <thead>
         <tr>
-           @* <th>ID</th>
+            <th>ID</th>
             <th>Year</th>
-            <th>Month</th>*@
+            <th>Month</th>
             <th>EmployeeName</th>
             <th>PurchaseCount</th>
             <th>ProductCount</th>
@@ -62,9 +62,9 @@
         @foreach (var salary in Model)
         {
             <tr>
-                @*<td>@salary.ID</td>
+                <td>@salary.ID</td>
                 <td>@salary.Year</td>
-                <td>@monthNames[salary.Month]</td>*@
+                <td>@monthNames[salary.Month]</td>
                 <td>
                     @{
                         var employee = await _context.Employees.FindAsync(salary.EmployeeID);

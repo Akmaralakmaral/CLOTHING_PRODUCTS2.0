@@ -394,26 +394,9 @@ namespace CLOTHING_PRODUCTS.Controllers
                 return NotFound(); // Можете сделать обработку отсутствия бюджета в вашем приложении
             }
 
-            //// Проверяем, хватает ли бюджета для обновления зарплаты
-            //if (salary.General > budget.BudgetAmount)
-            //{
-            //    // Если бюджета недостаточно, возвращаем сообщение
-            //    ModelState.AddModelError(string.Empty, "Not enough budget for this salary.");
-            //    return View(salary);
-            //}
-
-            //// Если Issued = 1, вычитаем General из BudgetAmount
-            //if (salary.Issued == 1)
-            //{
-            //    budget.BudgetAmount -= salary.General;
-            //}
-
             // Обновляем только General и Issued
             existingSalary.General = salary.General;
             existingSalary.Issued = salary.Issued;
-
-            //// Вычитаем сумму General из бюджета
-            //budget.BudgetAmount -= salary.General;
 
             // Сохраняем изменения в базе данных
             await _context.SaveChangesAsync();
