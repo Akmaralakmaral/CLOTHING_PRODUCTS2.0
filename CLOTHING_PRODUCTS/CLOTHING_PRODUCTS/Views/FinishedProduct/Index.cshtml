@@ -24,8 +24,8 @@
                 
                 <td>@finishedProduct.Name</td>
                 <td>@finishedProduct.MeasurementUnit.Name</td>
-                <td>@finishedProduct.Quantity</td>
-                <td>@finishedProduct.Amount</td>
+                <td>@finishedProduct.Quantity.ToString("0.00")</td>
+                <td>@finishedProduct.Amount.ToString("0.00")</td>
                  <td>
                     <div style="display: inline-block;">
                         <a asp-controller="FinishedProduct" asp-action="Edit" asp-route-id="@finishedProduct.FinishedProductId" class="btn btn-warning">Edit</a> | 

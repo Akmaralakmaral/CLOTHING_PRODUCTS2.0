@@ -53,8 +53,10 @@
                         </div>
                         <form asp-action="DeleteIngredient" method="post" style="display:inline;">
                             <input type="hidden" name="ingredientId" value="@ingredient.IngredientId" />
+                            <input type="hidden" name="productId" value="@ViewData["SelectedProductId"]" /> <!-- Передаем идентификатор выбранного продукта -->
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this ingredient?')">Delete</button>
                         </form>
+
                     </td>
                     
                 </tr>

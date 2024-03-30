@@ -84,8 +84,8 @@ namespace CLOTHING_PRODUCTS.Controllers
             ViewBag.ProductName = productName;
             ViewBag.RawMaterials = rawMaterials;
             ViewBag.ProductId = productId;
-            ViewBag.RawMaterialId = rawMaterialId; // Передаем значение rawMaterialId в представление
-            ViewBag.Quantity = quantity; // Передаем значение quantity в представление
+            ViewBag.RawMaterialId = rawMaterialId; 
+            ViewBag.Quantity = quantity;
 
             return View(productId);
         }
@@ -151,16 +151,17 @@ namespace CLOTHING_PRODUCTS.Controllers
             return RedirectToAction("Index", "KURSOVAYAIngredient", new { productId = productId });
         }
 
-        // POST: Удалить ингредиент
         [HttpPost]
-        public IActionResult DeleteIngredient(int ingredientId)
+        public IActionResult DeleteIngredient(int ingredientId, int productId)
         {
             // Вызываем хранимую процедуру DeleteIngredient для удаления ингредиента
             _dbContext.Database.ExecuteSqlInterpolated($"EXEC DeleteIngredient {ingredientId}");
 
-            // Перенаправляем пользователя на Index
-            return RedirectToAction("Index", "KURSOVAYAIngredient");
+            
+            // Перенаправляем пользователя на Index с передачей идентификатора выбранного продукта
+            return RedirectToAction("Index", "KURSOVAYAIngredient", new { productId = productId });
         }
+
 
     }
 }
