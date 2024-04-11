@@ -1,0 +1,36 @@
+﻿@model CLOTHING_PRODUCTS.Models.Credit
+
+<h1>Create Credit</h1>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="SumCredit">Sum Credit:</label>
+        <input asp-for="SumCredit" class="form-control" />
+        <span asp-validation-for="SumCredit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataOfReceive">Data Of Receive:</label>
+        <input asp-for="DataOfReceive" type="date" class="form-control"
+               value="@((Model.DataOfReceive != DateTime.MinValue) ? Model.DataOfReceive.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd"))" />
+        <span asp-validation-for="DataOfReceive" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Months">Months:</label>
+        <input asp-for="Months" class="form-control" />
+        <span asp-validation-for="Months" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Perst">Persent:</label>
+        <input asp-for="Perst" class="form-control" />
+        <span asp-validation-for="Perst" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Penny">Penny:</label>
+        <input asp-for="Penny" class="form-control" />
+        <span asp-validation-for="Penny" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
