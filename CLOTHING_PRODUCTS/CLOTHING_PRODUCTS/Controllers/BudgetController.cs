@@ -14,14 +14,21 @@ namespace CLOTHING_PRODUCTS.Controllers
             _dbContext = dbContext;
         }
 
-       public async Task<IActionResult> Index()
+       public async Task<IActionResult> Index(int? year, int? month)
        {
-            var budgets = await _dbContext.Budgets.ToListAsync();     
+            var budgets = await _dbContext.Budgets.ToListAsync();
+            if (year != null && month != null)
+            {
+                
+                ViewBag.SelectedYear = year;
+                ViewBag.SelectedMonth = month;
+
+            }
             return View(budgets);
        }
 
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, int? year, int? month)
         {
             var budgetToEdit = await _dbContext.Budgets.FindAsync(id);
 
@@ -29,13 +36,14 @@ namespace CLOTHING_PRODUCTS.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.SelectedYear = year;
+            ViewBag.SelectedMonth = month;
 
             return View(budgetToEdit);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Budget updateBudget)
+        public async Task<IActionResult> Edit(int id, Budget updateBudget, int? selectedYear, int? selectedMonth)
         {
             updateBudget.BudgetId = id;
             try
@@ -55,7 +63,15 @@ namespace CLOTHING_PRODUCTS.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            // Добавляем выбранный год и месяц в ViewBag
+            if (selectedYear != null && selectedMonth != null)
+            {
+                ViewBag.SelectedYear = selectedYear;
+                ViewBag.SelectedMonth = selectedMonth;
+            }
+            // Перенаправляем пользователя на страницу Index с выбранным годом и месяцем
+            return RedirectToAction(nameof(Index), new { year = selectedYear, month = selectedMonth });
+
         }
     }
 }

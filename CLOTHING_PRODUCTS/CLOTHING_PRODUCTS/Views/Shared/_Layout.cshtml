@@ -48,7 +48,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Budget" asp-action="Index">Budget</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYASalary" asp-action="Index" asp-route-year="@ViewBag.SelectedYear" asp-route-month="@ViewBag.SelectedMonth">Salary</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="PurchaseRawMaterial" asp-action="Index">PurchaseRawMaterial</a>
@@ -62,11 +62,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAProductManufacturing" asp-action="Index">ProductManufacturing</a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="SalaryTwo" asp-action="Index">Salary</a>
+                        </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Budget" asp-action="Index" asp-route-year="@ViewBag.SelectedYear" asp-route-month="@ViewBag.SelectedMonth">Budget</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYASalary" asp-action="Index">Salary</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYACredit" asp-action="Index">Credit</a>
                         </li>
                     </ul>
                 </div>

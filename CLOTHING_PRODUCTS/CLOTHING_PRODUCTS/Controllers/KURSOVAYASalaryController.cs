@@ -1,8 +1,9 @@
 ﻿using CLOTHING_PRODUCTS.Context;
 using CLOTHING_PRODUCTS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
+using System.Data;
 
 namespace CLOTHING_PRODUCTS.Controllers
 {
@@ -27,11 +28,10 @@ namespace CLOTHING_PRODUCTS.Controllers
             if (year != null && month != null)
             {
                 // Вычисляем общую сумму General для выбранного года и месяца
-                var totalGeneral = _context.Salaries
-                    .Where(s => s.Year == year && s.Month == month)
-                    .Sum(s => s.General);
+                
 
-                ViewBag.TotalGeneral = totalGeneral;
+                
+
                 if (fromEditGeneral.GetValueOrDefault())
                 {
                     var salaries = _context.Salaries.FromSqlRaw("EXEC [dbo].[GetSalaries] @Year, @Month",
@@ -42,14 +42,29 @@ namespace CLOTHING_PRODUCTS.Controllers
                 }
                 else
                 {
-                    _context.Database.ExecuteSqlRaw("EXEC [dbo].[CreateSalary] @Year, @Month",
-                        new Microsoft.Data.SqlClient.SqlParameter("@Year", year),
-                        new Microsoft.Data.SqlClient.SqlParameter("@Month", month));
+                    var issuedStatus = _context.Salaries
+                        .Where(s => s.Year == year && s.Month == month)
+                        .Select(s => s.Issued)
+                        .FirstOrDefault();
 
+                    if (issuedStatus == 0)
+                    {
+                        _context.Database.ExecuteSqlRaw("EXEC [dbo].[CreateSalary] @Year, @Month",
+                           new Microsoft.Data.SqlClient.SqlParameter("@Year", year),
+                           new Microsoft.Data.SqlClient.SqlParameter("@Month", month));
+                    }
+                    
                     var salaries = _context.Salaries.FromSqlRaw("EXEC [dbo].[GetSalaries] @Year, @Month",
                         new Microsoft.Data.SqlClient.SqlParameter("@Year", year),
                         new Microsoft.Data.SqlClient.SqlParameter("@Month", month)).ToList();
+                    var totalGeneral = _context.Salaries
+                    .Where(s => s.Year == year && s.Month == month)
+                    .Sum(s => s.General);
+                    ViewBag.SelectedYear = year;
+                    ViewBag.SelectedMonth = month;
+                    ViewBag.TotalGeneral = totalGeneral;
                     return View(salaries);
+                    
                 }
             }
 
@@ -87,6 +102,39 @@ namespace CLOTHING_PRODUCTS.Controllers
 
             // Передача года и месяца при перенаправлении
             return RedirectToAction(nameof(Index), new { year = year, month = month, fromEditGeneral = true });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateIssuedStatus(int year, int month)
+        {
+            // Переменная для хранения результата хранимой процедуры
+            int result = 0;
+
+            // Вызов хранимой процедуры UpdateIssuedStatus
+            SqlParameter resultParam = new SqlParameter("@Result", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            _context.Database.ExecuteSqlRaw("EXEC [dbo].[UpdateIssuedStatus] @Year, @Month, @Result OUTPUT",
+                new SqlParameter("@Year", year),
+                new SqlParameter("@Month", month),
+                resultParam);
+
+            // Получаем значение переменной result после выполнения процедуры
+            result = (int)resultParam.Value;
+            // Проверка результата и выполнение соответствующих действий
+            bool fromEditGeneral = (result == 1);
+            if (result == 2)
+            {
+                // If the budget is not enough, return an error message
+                TempData["ErrorMessage"] = "Not enough budget to issue all salaries.";
+            }
+
+            // Возвращаем пользователя на страницу Index
+            return RedirectToAction(nameof(Index), new { year = year, month = month, fromEditGeneral = fromEditGeneral });
         }
 
     }

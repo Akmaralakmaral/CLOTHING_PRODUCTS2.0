@@ -6,7 +6,15 @@
 
 <h1>Salary Information</h1>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <form asp-controller="KURSOVAYASalary" asp-action="Index" method="get" id="salaryForm">
+   
     <div>
         <label>Select Year:</label>
         <select name="year">
@@ -33,7 +41,12 @@
             <label>Total General:</label>
             <span>@ViewBag.TotalGeneral</span>
         }
-</div>
+    </div>
+</form>
+<form asp-controller="KURSOVAYASalary" asp-action="UpdateIssuedStatus" method="post">
+    <input type="hidden" name="year" value="@ViewBag.SelectedYear" />
+    <input type="hidden" name="month" value="@ViewBag.SelectedMonth" />
+    <button type="submit" class="btn btn-primary">Issued All</button>
 </form>
 <table class="table">
     <thead>
@@ -70,7 +83,14 @@
                 <td>@item.General</td>
                 <td>@item.Issued</td>
                 <td>
+                    @if (item.Issued == 1)
+                    {
+                        <span class="btn btn-secondary disabled">Edit</span>
+                    }
+                    else
+                    {
                     <a asp-action="EditGeneral" asp-route-id="@item.ID" class="btn btn-primary">Edit</a> 
+                    }
                 </td>
             </tr>
         }

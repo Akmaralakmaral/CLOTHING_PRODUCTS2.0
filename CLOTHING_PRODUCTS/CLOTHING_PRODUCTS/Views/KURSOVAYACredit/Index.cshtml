@@ -1,0 +1,31 @@
+﻿@model List<CLOTHING_PRODUCTS.Models.Credit>
+
+<h1>List of Credits</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Sum Credit</th>
+            <th>Data Of Receive</th>
+            <th>Data Of End</th>
+            <th>Months</th>
+            <th>Perst</th>
+            <th>Penny</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var credit in Model)
+        {
+            <tr>
+                <td>@credit.IdCredit</td>
+                <td>@credit.SumCredit</td>
+                <td>@credit.DataOfReceive.ToShortDateString()</td>
+                <td>@credit.DataOfEnd.ToShortDateString()</td>
+                <td>@credit.Months</td>
+                <td>@credit.Perst</td>
+                <td>@credit.Penny</td>
+            </tr>
+        }
+    </tbody>
+</table>

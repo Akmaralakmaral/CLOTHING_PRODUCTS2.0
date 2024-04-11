@@ -24,6 +24,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<ProductManufacturing> ProductManufacturings { get; set; }
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<Month> Months { get; set; }
+        public DbSet<Credit> Credits { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

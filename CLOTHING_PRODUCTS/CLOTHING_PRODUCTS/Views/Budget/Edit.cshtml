@@ -6,7 +6,17 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<div>
+    @if (ViewBag.SelectedYear != null && ViewBag.SelectedMonth != null)
+    {
+            <p>Selected Year: @ViewBag.SelectedYear</p>
+            <p>Selected Month: @ViewBag.SelectedMonth</p>
+    }
+</div>
+
 <form asp-action="Edit" asp-route-id="@Model.BudgetId" method="post">
+    <input type="hidden" name="selectedYear" value="@ViewBag.SelectedYear" />
+    <input type="hidden" name="selectedMonth" value="@ViewBag.SelectedMonth" />
     <div class="form-group">
         <label asp-for="BudgetAmount" class="control-label"></label>
         <input asp-for="BudgetAmount" class="form-control" />
