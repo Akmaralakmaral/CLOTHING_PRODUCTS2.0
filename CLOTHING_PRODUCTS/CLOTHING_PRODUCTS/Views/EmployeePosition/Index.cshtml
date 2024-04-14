@@ -28,7 +28,7 @@
             <tr>
                 
                 <td>@position.Title</td>
-                <td>@position.Title</td>
+                <td>@position.Role.RoleName</td>
                 @*<td>
                     <a asp-controller="EmployeePosition" asp-action="Edit" asp-route-id="@position.EmployeePositionId">Edit</a> |
                    <form asp-action="Delete" asp-route-id="@position.EmployeePositionId" method="post" onsubmit="return confirm('Are you sure you want to delete this employee?');">

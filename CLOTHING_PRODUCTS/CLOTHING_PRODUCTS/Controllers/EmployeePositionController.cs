@@ -16,12 +16,14 @@ namespace CLOTHING_PRODUCTS.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var employeePositions = await _dbContext.EmployeePositions.ToListAsync();
+            var employeePositions = await _dbContext.EmployeePositions.Include(ep => ep.Role).ToListAsync();
             return View(employeePositions);
         }
 
         public IActionResult Create()
         {
+            ViewBag.Roles = _dbContext.Roles.ToList();
+
             return View();
         }
 
@@ -45,12 +47,16 @@ namespace CLOTHING_PRODUCTS.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var positionToEdit = await _dbContext.EmployeePositions.FindAsync(id);
+            var positionToEdit = _dbContext.EmployeePositions
+                .Include(ep =>ep.Role)
+                .FirstOrDefault(ep => ep.EmployeePositionId == id);
 
+            
             if (positionToEdit == null)
             {
                 return NotFound(); // Если должность не найдена, возвращаем 404
             }
+            ViewBag.Roles = _dbContext.Roles.ToList();
 
             return View(positionToEdit);
         }
