@@ -1,0 +1,92 @@
+﻿@model List<Payment>
+
+<h1>Payments</h1>
+
+<div class="form-group">
+    <label for="selectedCreditId">Select Credit:</label>
+    @Html.DropDownList("selectedCreditId", (IEnumerable<SelectListItem>)ViewBag.CreditList, "Select Credit", new { @class = "form-control", id = "selectedCreditId" })
+</div>
+
+
+@{
+    var lastCreditId = 0; // Default value if conversion fails
+    int.TryParse(((List<SelectListItem>)ViewBag.CreditList).LastOrDefault()?.Value, out lastCreditId);
+
+    // Определите выбран ли последний кредит
+    var isLastCreditSelected = ViewBag.SelectedCreditId != null && ViewBag.SelectedCreditId == lastCreditId;
+}
+
+
+@if (Model != null && Model.Any())
+{       
+    <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Deadline</th>
+                    <th>Main Sum</th>
+                    <th>Per Sum</th>
+                    <th>Com Sum</th>
+
+                    <th>Penny Sum</th>
+                    <th>Total</th>
+                    <th>Missed</th>
+                    <th>Remains</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model)
+                {
+                    <tr>
+                        <td>@payment.IdPayment</td>
+                        <td>@payment.PaymentDate.ToShortDateString()</td>
+                        <td>@payment.PaymentDeadline.ToShortDateString()</td>
+                        <td>@payment.MainSum.ToString("N2")</td>
+                        <td>@payment.PerSum.ToString("N2")</td>
+                        <td>@payment.ComSum.ToString("N2")</td>
+
+                        <td>@payment.PennySum.ToString("N2")</td>
+                        <td>@payment.Total.ToString("N2")</td>
+                        <td>@payment.Missed.ToString("N2")</td>
+                        <td>@payment.Remains.ToString("N2")</td>
+
+                    </tr>
+
+                }
+                <tr>
+                    <td><strong>Total:</strong></td>
+                    <td colspan="2"></td>
+                    <td> @Model.Sum(p => p.MainSum).ToString("N2")</td>
+                    <td> @Model.Sum(p => p.PerSum).ToString("N2")</td>
+                    <td>  @Model.Sum(p => p.ComSum).ToString("N2")</td>
+
+                    <td>  @Model.Sum(p => p.PennySum).ToString("N2")</td>
+                    <td>  @Model.Sum(p => p.Total).ToString("N2")</td>
+                    <td></td> 
+                    <td></td> 
+                </tr>
+            </tbody>
+     </table>
+       
+    
+  
+}
+@if (ViewBag.SelectedCreditId != null && ViewBag.SelectedCreditId == lastCreditId)
+{
+    <div>
+        <a asp-action="Create" asp-route-lastCreditId="@lastCreditId" class="btn btn-primary">Create Payment</a>
+    </div>
+}
+
+<script>
+    // Обработчик изменения значения в выпадающем списке
+    document.getElementById("selectedCreditId").addEventListener("change", function () {
+        var selectedCreditId = this.value; // Получаем выбранный ID кредита
+
+        // Выполняем POST-запрос при изменении выбора кредита
+        if (selectedCreditId) {
+            window.location.href = "/KURSOVAYAPayment/Index?selectedCreditId=" + selectedCreditId; // Перенаправляем на Index с выбранным ID кредита
+        }
+    });
+</script>

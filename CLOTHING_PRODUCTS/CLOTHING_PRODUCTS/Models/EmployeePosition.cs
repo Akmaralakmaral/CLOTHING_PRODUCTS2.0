@@ -6,5 +6,7 @@
         public string Title { get; set;}
 
         public virtual ICollection<Employee> Employees { get;set; }
+        public virtual Role Role { get; set; }
+
     }
 }

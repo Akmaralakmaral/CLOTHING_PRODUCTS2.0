@@ -1,0 +1,20 @@
+﻿@model CLOTHING_PRODUCTS.Models.Payment
+
+<h1>Create Payment</h1>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+<form asp-controller="KURSOVAYAPayment" asp-action="Create">
+    <div class="form-group">
+        <label asp-for="PaymentDate" class="control-label"></label>
+        <input asp-for="PaymentDate" type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="PaymentDate" class="text-danger"></span>
+    </div>
+    <input type="hidden" name="lastCreditId" value="@ViewBag.LastCreditId" />
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
