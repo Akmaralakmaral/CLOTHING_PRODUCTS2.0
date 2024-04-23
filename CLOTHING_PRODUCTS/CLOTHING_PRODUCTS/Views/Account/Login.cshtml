@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "_Layout"; // Используйте основной макет
+    ViewData["Title"] = "Login";
+    
+    ViewBag.HideNavigation = true;
+}
+
+@model CLOTHING_PRODUCTS.Models.LoginViewModel
+
+
+
+<h2>Login</h2>
+
+
+
+<form asp-action="Login" method="post">
+   @* <div class="form-group">
+        <label for="LoginName">Login Name:</label>
+        <input type="text" class="form-control" id="LoginName" name="LoginName" value="@Model.LoginName">
+    </div>*@
+    <div class="form-group">
+        <label asp-for="LoginName">Login Name:</label>
+        <input asp-for="LoginName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Password">Password:</label>
+        <input type="password" class="form-control" id="Password" name="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
