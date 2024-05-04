@@ -45,8 +45,8 @@ namespace CLOTHING_PRODUCTS.Controllers
         }
 
 
-        public async Task<IActionResult> Edit(int id)
-        {
+         public async Task<IActionResult> Edit(int id)
+         {
             var positionToEdit = _dbContext.EmployeePositions
                 .Include(ep =>ep.Role)
                 .FirstOrDefault(ep => ep.EmployeePositionId == id);

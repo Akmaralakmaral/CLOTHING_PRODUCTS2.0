@@ -145,8 +145,8 @@ namespace CLOTHING_PRODUCTS.Controllers
                                             .FirstOrDefault();
 
             // Устанавливаем значение бонуса (Bonus) из бюджета
-            salary.Bonus = budget.Bonus;
-
+             salary.Bonus = budget.Bonus;
+ 
             double bonus2 = (salary.CommonCount * salary.Bonus) / 100;
 
             // Вычисляем значение General

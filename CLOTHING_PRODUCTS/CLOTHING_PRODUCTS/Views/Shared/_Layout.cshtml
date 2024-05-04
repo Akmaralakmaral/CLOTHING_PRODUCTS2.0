@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,64 +22,80 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                            @*@if (User.Identity.IsAuthenticated)*@
+                            
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                                    <button type="submit" class="btn btn-primary">Logout</button>
+                                </form>
+                            </li>
+                            
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EmployeePosition" asp-action="Index">Positions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="MeasurementUnit" asp-action="Index">MeasurementUnit</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RawMaterial" asp-action="Index">RawMaterial</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="FinishedProduct" asp-action="Index">FinishedProduct</a>
-                        </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Ingredient" asp-action="Index">Ingredient</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAIngredient" asp-action="Index">Ingredient</a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYASalary" asp-action="Index" asp-route-year="@ViewBag.SelectedYear" asp-route-month="@ViewBag.SelectedMonth">Salary</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PurchaseRawMaterial" asp-action="Index">PurchaseRawMaterial</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="SaleProduct" asp-action="Index">SaleProduct</a>
-                        </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProductManufacturing" asp-action="Index">ProductManufacturing</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAProductManufacturing" asp-action="Index">ProductManufacturing</a>
-                        </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="SalaryTwo" asp-action="Index">Salary</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Budget" asp-action="Index" asp-route-year="@ViewBag.SelectedYear" asp-route-month="@ViewBag.SelectedMonth">Budget</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYACredit" asp-action="Index">Credit</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAPayment" asp-action="Index">Payment</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYARole" asp-action="Index">Role</a>
-                        </li>
+                            @if (ViewContext.HttpContext.Session.GetString("UserRole") == "Бухгалтер" || ViewContext.HttpContext.Session.GetString("UserRole") == "Админ" || ViewContext.HttpContext.Session.GetString("UserRole") == "Директор")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
+                                </li>
+                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYASalary" asp-action="Index">Salary</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Budget" asp-action="Index">Budget</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYACredit" asp-action="Index">Credit</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAPayment" asp-action="Index">Payment</a>
+                                </li>
+                            }
+
+                            @if (ViewContext.HttpContext.Session.GetString("UserRole") == "Админ" || ViewContext.HttpContext.Session.GetString("UserRole") == "Директор")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeePosition" asp-action="Index">Positions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYARole" asp-action="Index">Role</a>
+                                </li>
+                            }
+
+
+
+                            @if (ViewContext.HttpContext.Session.GetString("UserRole") == "Менеджер" || ViewContext.HttpContext.Session.GetString("UserRole") == "Админ" || ViewContext.HttpContext.Session.GetString("UserRole") == "Директор")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="RawMaterial" asp-action="Index">RawMaterial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="FinishedProduct" asp-action="Index">FinishedProduct</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="PurchaseRawMaterial" asp-action="Index">PurchaseRawMaterial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="SaleProduct" asp-action="Index">SaleProduct</a>
+                                </li>
+                            }
+
+                            @if (ViewContext.HttpContext.Session.GetString("UserRole") == "Технолог" || ViewContext.HttpContext.Session.GetString("UserRole") == "Админ" || ViewContext.HttpContext.Session.GetString("UserRole") == "Директор")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAProductManufacturing" asp-action="Index">ProductManufacturing</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="KURSOVAYAIngredient" asp-action="Index">Ingredient</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="MeasurementUnit" asp-action="Index">MeasurementUnit</a>
+                                </li>
+
+                            }
+
+                        
                     </ul>
                 </div>
             </div>

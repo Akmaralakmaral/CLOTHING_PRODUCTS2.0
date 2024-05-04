@@ -27,6 +27,7 @@ namespace CLOTHING_PRODUCTS.Context
         public DbSet<Credit> Credits { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Role> Roles { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=DESKTOP-40QVERS;Initial Catalog=CLOTHING_PRODUCTS2.0;User ID=sa;Password=2004;TrustServerCertificate=true");

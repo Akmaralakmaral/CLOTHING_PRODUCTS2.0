@@ -30,10 +30,12 @@
         <label>Month:</label>
         @Html.DropDownList("selectedMonth", ViewData["Months"] as SelectList, "Months", new { onchange = "this.form.submit();" })
     </div>
-
+     @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
     <div>
         <a class="btn btn-primary" asp-controller="SalaryTwo" asp-action="IssuedAll" asp-route-selectedYear="@ViewData["SelectedYear"]" asp-route-selectedMonth="@ViewData["SelectedMonth"]">Issued All</a>
     </div>
+                }
     <div>
         <strong>Total General for the selected month and year: @Model.Where(s => s.Issued == 0).Sum(s => s.General)</strong>
     </div>
@@ -93,7 +95,10 @@
                     }
                     else
                     {
+                         @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
                         <a class="btn btn-primary" asp-controller="SalaryTwo" asp-action="Edit" asp-route-id="@salary.ID">Edit</a>
+                }
                     }
                 </td>
 

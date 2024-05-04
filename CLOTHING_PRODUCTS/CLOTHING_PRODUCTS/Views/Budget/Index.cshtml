@@ -35,10 +35,13 @@
                 <td>@budget.BudgetAmount.ToString("0.00")</td>
                 <td>@budget.Percent</td>
                 <td>@budget.Bonus</td>
-                <td>
-                    <a asp-controller="Budget" asp-action="Edit" asp-route-id="@budget.BudgetId"
+                @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
+                    <td>
+                        <a asp-controller="Budget" asp-action="Edit" asp-route-id="@budget.BudgetId"
                        asp-route-year="@ViewBag.SelectedYear" asp-route-month="@ViewBag.SelectedMonth">Edit</a>
                 </td>
+                }
             </tr>
         }
     </tbody>

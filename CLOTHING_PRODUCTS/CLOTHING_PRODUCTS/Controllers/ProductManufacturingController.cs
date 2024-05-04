@@ -51,22 +51,22 @@ namespace CLOTHING_PRODUCTS.Controllers
             foreach (var ingredient in finishedProduct.Ingredients)
             {
                 var rawMaterial = await _dbContext.RawMaterials.FindAsync(ingredient.RawMaterialId);
-                if (rawMaterial.Quantity < ingredient.Quantity * productManufacturing.Quantity)
+                 if (rawMaterial.Quantity < ingredient.Quantity * productManufacturing.Quantity)
                 {
                     ModelState.AddModelError(string.Empty, $"Недостаточно сырья: {rawMaterial.Name}");
                     ViewBag.FinishedProducts = new SelectList(_dbContext.FinishedProducts, "FinishedProductId", "Name", productManufacturing.FinishedProductID);
                     ViewBag.Employees = new SelectList(_dbContext.Employees, "EmployeeId", "FullName", productManufacturing.EmployeeID);
                     return View(productManufacturing);
                 }   
-            }
+             }
             double productAmount = 0;
             // Вычитание необходимого сырья
             foreach (var ingredient in finishedProduct.Ingredients)
             {
                 var rawMaterial = await _dbContext.RawMaterials.FindAsync(ingredient.RawMaterialId);
                 double rawMaterialQuantity = ingredient.Quantity * productManufacturing.Quantity;
-                double rawMaterialAmount = (rawMaterial.Amount / rawMaterial.Quantity)*(rawMaterialQuantity);
-                
+                 double rawMaterialAmount = (rawMaterial.Amount / rawMaterial.Quantity)*(rawMaterialQuantity);
+                 
                 rawMaterial.Amount -= rawMaterialAmount;
                 rawMaterial.Quantity -= rawMaterialQuantity;
                 productAmount = productAmount + rawMaterialAmount;

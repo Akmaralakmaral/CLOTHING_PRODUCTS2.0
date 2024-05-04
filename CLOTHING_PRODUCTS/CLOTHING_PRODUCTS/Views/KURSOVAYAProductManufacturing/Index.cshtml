@@ -1,7 +1,10 @@
 ﻿@model List<CLOTHING_PRODUCTS.Models.ProductManufacturing>
 
 <h2>Product Manufacturings</h2>
+ @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
 <a asp-action="Create" class="btn btn-primary">Create</a>
+                }
 <table class="table">
     <thead>
         <tr>

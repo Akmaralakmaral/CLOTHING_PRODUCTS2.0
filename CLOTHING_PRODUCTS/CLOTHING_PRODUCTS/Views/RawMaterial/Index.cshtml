@@ -5,7 +5,10 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+ @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
 <a asp-action="Create" class="btn btn-primary">Create New RawMaterial</a>
+                }
 <table class="table">
     <thead>
         <tr>
@@ -26,9 +29,10 @@
                 <td>@rawMaterial.MeasurementUnit.Name</td>
                 <td>@rawMaterial.Quantity.ToString("0.00")</td>
                 <td>@rawMaterial.Amount.ToString("0.00")</td>
-
-                <td>
-                    <div style="display: inline-block;">
+                 @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
+                    <td>
+                        <div style="display: inline-block;">
                         <a asp-controller="RawMaterial" asp-action="Edit" asp-route-id="@rawMaterial.RawMaterialId" class="btn btn-warning">Edit</a> | 
                     </div>
 
@@ -39,7 +43,7 @@
                     </div>
 
                 </td>
-
+                }
            
             </tr>
         }

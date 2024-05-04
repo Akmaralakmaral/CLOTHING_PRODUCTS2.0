@@ -72,12 +72,15 @@
     
   
 }
+ @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
 @if (ViewBag.SelectedCreditId != null && ViewBag.SelectedCreditId == lastCreditId)
 {
     <div>
         <a asp-action="Create" asp-route-lastCreditId="@lastCreditId" class="btn btn-primary">Create Payment</a>
     </div>
 }
+                }
 
 <script>
     // Обработчик изменения значения в выпадающем списке

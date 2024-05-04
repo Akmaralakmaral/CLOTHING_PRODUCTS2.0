@@ -46,7 +46,10 @@
 <form asp-controller="KURSOVAYASalary" asp-action="UpdateIssuedStatus" method="post">
     <input type="hidden" name="year" value="@ViewBag.SelectedYear" />
     <input type="hidden" name="month" value="@ViewBag.SelectedMonth" />
-    <button type="submit" class="btn btn-primary">Issued All</button>
+     @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+    {
+        <button type="submit" class="btn btn-primary">Issued All</button>
+    }
 </form>
 <table class="table">
     <thead>
@@ -89,7 +92,10 @@
                     }
                     else
                     {
+                        @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                        {
                     <a asp-action="EditGeneral" asp-route-id="@item.ID" class="btn btn-primary">Edit</a> 
+                        }
                     }
                 </td>
             </tr>

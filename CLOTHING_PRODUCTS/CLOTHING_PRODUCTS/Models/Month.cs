@@ -1,8 +1,8 @@
-﻿namespace CLOTHING_PRODUCTS.Models
+﻿ namespace CLOTHING_PRODUCTS.Models
 {
     public class Month
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-    }
+         public string Name { get; set; }
+     }
 }

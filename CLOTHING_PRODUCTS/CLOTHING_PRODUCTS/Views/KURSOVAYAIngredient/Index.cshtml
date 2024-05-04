@@ -47,7 +47,10 @@
                     
                     <td>@ingredient.RawMaterialName</td>
                     <td>@ingredient.Quantity.ToString("0.00")</td>
-                    <td>
+                    @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                    {
+                        <td>
+
                         <div style="display: inline-block;">
                             <a asp-controller="KURSOVAYAIngredient" asp-action="EditIngredient" asp-route-ingredientId="@ingredient.IngredientId" class="btn btn-warning">Edit</a> | 
                         </div>
@@ -58,11 +61,13 @@
                         </form>
 
                     </td>
-                    
+                    }
                 </tr>
             }
         </tbody>
     </table>
 }
-
+ @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
 <a class="btn btn-primary" asp-controller="KURSOVAYAIngredient" asp-action="CreateIngredientForm" asp-route-productId="@ViewData["SelectedProductId"]">Create Ingredient</a>
+                }

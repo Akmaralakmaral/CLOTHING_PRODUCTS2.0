@@ -56,22 +56,22 @@ namespace CLOTHING_PRODUCTS.Controllers
             var finishedProduct = await _dbContext.FinishedProducts.FindAsync(saleProduct.FinishedProductID);
 
             
-            if (finishedProduct.Quantity < saleProduct.Quantity)
+             if (finishedProduct.Quantity < saleProduct.Quantity)
             {
                 ViewData["InsufficientQuantityMessage"] = "Недостаточно товара на складе.";
                 ViewBag.FinishedProducts = new SelectList(_dbContext.FinishedProducts, "FinishedProductId", "Name");
                 ViewBag.Employees = new SelectList(_dbContext.Employees, "EmployeeId", "FullName", saleProduct.EmployeeID);
                 return View(saleProduct);
             }
-
+ 
             
            
 
             var budget = await _dbContext.Budgets.FirstOrDefaultAsync();
 
             var sebestiomost = (saleProduct.Quantity * (finishedProduct.Amount / finishedProduct.Quantity));
-            var saleAmount = sebestiomost *( ((budget.Percent) / 100)+1);
-
+             var saleAmount = sebestiomost *( ((budget.Percent) / 100)+1);
+ 
             
             budget.BudgetAmount += saleAmount;
             saleProduct.Amount = saleAmount;

@@ -9,9 +9,9 @@
         public DateTime Date { get; set; }
         public int EmployeeID { get; set; }
 
-        public virtual RawMaterial RawMaterial { get; set; }
-        public virtual Employee Employee { get; set; }
-
+         public virtual RawMaterial RawMaterial { get; set; }
+         public virtual Employee Employee { get; set; }
+ 
 
         
     }

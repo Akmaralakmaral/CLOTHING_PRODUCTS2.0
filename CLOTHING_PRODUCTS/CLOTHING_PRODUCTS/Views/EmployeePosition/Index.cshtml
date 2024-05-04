@@ -11,7 +11,11 @@
         @TempData["ErrorMessage"]
     </div>
 }
-<a asp-controller="EmployeePosition" asp-action="Create" class="btn btn-primary">Create Employee Position</a>
+
+@if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+{
+    <a asp-controller="EmployeePosition" asp-action="Create" class="btn btn-primary">Create Employee Position</a>
+}
 
 <table class="table">
     <thead>
@@ -35,9 +39,10 @@
                         <button type="submit" class="btn-link">Delete</button>
                     </form>
                 </td>*@
-
-                <td>
-                    <div style="display: inline-block;">
+                @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
+                    <td>
+                        <div style="display: inline-block;">
                         <a asp-controller="EmployeePosition" asp-action="Edit" asp-route-id="@position.EmployeePositionId" class="btn btn-warning">Edit</a> |
                     </div>
                     <div style="display: inline-block;">
@@ -46,7 +51,7 @@
                         </form>
                     </div>
                 </td>
-
+                }
             </tr>
         }
     </tbody>

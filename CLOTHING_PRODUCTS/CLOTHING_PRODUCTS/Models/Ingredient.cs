@@ -6,9 +6,9 @@
         public int FinishedProductId { get; set; }
         public int RawMaterialId { get; set; }
         public double Quantity { get; set; }
-        public string RawMaterialName { get; set; }
-
-        public virtual FinishedProduct FinishedProduct { get; set; }
-        public virtual RawMaterial RawMaterial { get; set; }
-    }
+         public string RawMaterialName { get; set; }
+ 
+         public virtual FinishedProduct FinishedProduct { get; set; }
+         public virtual RawMaterial RawMaterial { get; set; }
+     }
 }

@@ -36,7 +36,7 @@ namespace CLOTHING_PRODUCTS.Controllers
             try
             {
                 // Вызов хранимой процедуры для создания роли
-                await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC dbo.CreateRole {role.RoleName}, {role.LoginName}, {role.Password}");
+                await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC dbo.CreateRole {role.RoleName}");
 
                 return RedirectToAction("Index");
             }
@@ -70,7 +70,7 @@ namespace CLOTHING_PRODUCTS.Controllers
             try
             {
                 // Вызов хранимой процедуры для обновления роли
-                await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC dbo.UpdateRole {role.RoleId}, {role.RoleName}, {role.LoginName}, {role.Password}");
+                await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC dbo.UpdateRole {role.RoleId}, {role.RoleName}");
 
                 return RedirectToAction("Index");
             }

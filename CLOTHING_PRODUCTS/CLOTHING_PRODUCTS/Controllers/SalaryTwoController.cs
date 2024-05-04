@@ -252,8 +252,8 @@ namespace CLOTHING_PRODUCTS.Controllers
                    if  (salary.Issued != 1)
                     {
                         var employee = await _context.Employees.FindAsync(salary.EmployeeID);
-                        salary.SalaryAmount = employee.Salary;
-
+                         salary.SalaryAmount = employee.Salary;
+ 
                         salary.ProductCount = await _context.ProductManufacturings
                             .Where(pm => pm.EmployeeID == salary.EmployeeID &&
                                          pm.Date.Year == selectedYear &&
@@ -275,8 +275,8 @@ namespace CLOTHING_PRODUCTS.Controllers
                         salary.CommonCount = salary.ProductCount + salary.SalesCount + salary.PurchaseCount;
 
                         var budget = _context.Budgets.FirstOrDefault();
-                        double bonus2 = salary.CommonCount * budget.Bonus / 100;
-
+                         double bonus2 = salary.CommonCount * budget.Bonus / 100;
+ 
                         salary.Bonus = bonus2 * employee.Salary;
                         salary.Bonus = Math.Round(salary.Bonus, 2);
                         string bonusString = salary.Bonus.ToString("0.00", CultureInfo.InvariantCulture);
@@ -324,8 +324,8 @@ namespace CLOTHING_PRODUCTS.Controllers
                     salary.CommonCount = salary.ProductCount + salary.SalesCount + salary.PurchaseCount;
 
                     var budget = _context.Budgets.FirstOrDefault();
-                    double bonus2 = salary.CommonCount * budget.Bonus / 100;
-
+                     double bonus2 = salary.CommonCount * budget.Bonus / 100;
+ 
                     salary.Bonus = bonus2 * employee.Salary;
                     salary.Bonus = Math.Round(salary.Bonus, 2);
                     string bonusString = salary.Bonus.ToString("0.00", CultureInfo.InvariantCulture);
@@ -424,13 +424,13 @@ namespace CLOTHING_PRODUCTS.Controllers
             var budget = await _context.Budgets.FirstOrDefaultAsync();
 
             // Check if the budget is sufficient
-            if (totalGeneral > budget.BudgetAmount)
+             if (totalGeneral > budget.BudgetAmount)
             {
                 // If the budget is not enough, return an error message
                 TempData["ErrorMessage"] = "Not enough budget to issue all salaries.";
                 return RedirectToAction(nameof(Index), new { selectedYear, selectedMonth });
             }
-
+ 
             // Subtract General from BudgetAmount for each salary and set Issued to 1
             foreach (var salary in salariesToBeIssued)
             {

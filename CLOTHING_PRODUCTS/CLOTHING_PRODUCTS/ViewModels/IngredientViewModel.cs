@@ -6,6 +6,6 @@
         public int FinishedProductId { get; set; }
         public int RawMaterialId { get; set; }
         public double Quantity { get; set; }
-        public string RawMaterialName { get; set; } // Название сырья
-    }
+         public string RawMaterialName { get; set; } // Название сырья
+     }
 }

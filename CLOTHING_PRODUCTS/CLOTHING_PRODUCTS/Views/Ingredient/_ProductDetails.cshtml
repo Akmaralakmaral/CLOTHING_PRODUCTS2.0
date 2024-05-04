@@ -19,9 +19,14 @@
                     <span id="quantity_@ingredient.IngredientId">@ingredient.Quantity</span>
                     <input type="text" id="editQuantity_@ingredient.IngredientId" style="display:none;" value="@ingredient.Quantity" />
                 </td>
+
                 <td>
-                    <a href="@Url.Action("EditIngredient", new { id = ingredient.IngredientId })">Edit Ingredient</a> |
-                    <a href="#" onclick="deleteIngredient('@ingredient.IngredientId')">Delete Ingredient</a>
+                    @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                    {
+                        <a href="@Url.Action("EditIngredient", new { id = ingredient.IngredientId })">Edit Ingredient</a>
+                    
+                        < a href = "#" onclick = "deleteIngredient('@ingredient.IngredientId')" > Delete Ingredient </ a >
+                    }
                 </td>
             </tr>
         }

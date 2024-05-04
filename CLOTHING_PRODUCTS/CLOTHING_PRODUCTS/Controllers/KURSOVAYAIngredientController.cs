@@ -117,11 +117,17 @@ namespace CLOTHING_PRODUCTS.Controllers
                 .FirstOrDefault();
 
             // Получаем название материала по его ID
+ 
             var rawMaterial = _dbContext.RawMaterials
                 .FirstOrDefault(r => r.RawMaterialId == ingredient.RawMaterialId);
+ 
 
             // Устанавливаем название материала в свойство RawMaterialName
+ 
+ 
             ingredient.RawMaterialName = rawMaterial.Name;
+ 
+ 
             // Получаем список сырья из хранимой процедуры
             var rawMaterials = _dbContext.RawMaterials.FromSqlRaw("EXEC GetRawMaterials").ToList();
 

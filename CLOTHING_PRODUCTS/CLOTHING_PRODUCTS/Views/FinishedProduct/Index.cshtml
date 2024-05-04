@@ -5,7 +5,11 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-<a asp-action="Create" class="btn btn-primary">Create New Product</a>
+
+@if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+{
+    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+}   
 <table class="table">
     <thead>
         <tr>
@@ -26,8 +30,10 @@
                 <td>@finishedProduct.MeasurementUnit.Name</td>
                 <td>@finishedProduct.Quantity.ToString("0.00")</td>
                 <td>@finishedProduct.Amount.ToString("0.00")</td>
-                 <td>
-                    <div style="display: inline-block;">
+                @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
+                    <td>
+                        <div style="display: inline-block;">
                         <a asp-controller="FinishedProduct" asp-action="Edit" asp-route-id="@finishedProduct.FinishedProductId" class="btn btn-warning">Edit</a> | 
                     </div>
 
@@ -38,6 +44,7 @@
                     </div>
 
                 </td>
+                }
                
             </tr>
         }

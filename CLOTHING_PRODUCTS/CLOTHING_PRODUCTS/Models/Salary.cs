@@ -15,8 +15,8 @@
         public double General { get; set; }
         public int Issued { get; set; } // 0 - Not Issued, 1 - Issued
 
-        public string EmployeeName { get; set; }
-
-        public virtual Employee Employee { get; set; }
-    }
+         public string EmployeeName { get; set; }
+ 
+         public virtual Employee Employee { get; set; }
+     }
 }

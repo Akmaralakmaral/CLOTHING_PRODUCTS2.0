@@ -80,8 +80,8 @@ namespace CLOTHING_PRODUCTS.Controllers
                      .Select(s => new Salary { ID = s.ID, General = s.General, Year = s.Year, Month = s.Month })
                      .FirstOrDefault();
             // Получаем значения года и месяца из запроса
-            int year = salary.Year;
-            int month = salary.Month;
+             int year = salary.Year;
+             int month = salary.Month;
 
             ViewBag.Year = year;
             ViewBag.Month = month;

@@ -2,9 +2,12 @@
 
 <h1>List of Credits</h1>
 
+ @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
+                {
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New Credit</a>
 </p>
+                }
 
 <table class="table">
     <thead>
