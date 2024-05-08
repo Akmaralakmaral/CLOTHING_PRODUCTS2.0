@@ -91,5 +91,43 @@ namespace CLOTHING_PRODUCTS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Report(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate == null)
+            {
+                startDate = DateTime.Today; // Устанавливаем сегодняшнюю дату по умолчанию
+            }
+
+            if (endDate == null)
+            {
+                endDate = DateTime.Today; // Устанавливаем сегодняшнюю дату по умолчанию
+            }
+
+            ViewBag.SelectedStartDate = startDate;
+            ViewBag.SelectedEndDate = endDate;
+
+            // Выполняем запрос к хранимой процедуре без использования Include
+            var manufacturingReportData = await _dbContext.ProductManufacturings
+                .FromSqlInterpolated($"EXEC [dbo].[ManufacturingReport] {startDate}, {endDate}")
+                .ToListAsync();
+
+            // Загружаем связанные данные о сотрудниках и продуктах для каждого объекта SaleProduct
+            foreach (var manufacturingProduct in manufacturingReportData)
+            {
+                _dbContext.Entry(manufacturingProduct)
+                    .Reference(sp => sp.Employee)
+                    .Load();
+
+                _dbContext.Entry(manufacturingProduct)
+                    .Reference(sp => sp.FinishedProduct)
+                    .Load();
+            }
+
+
+            return View(manufacturingReportData);
+        }
+
+
+
     }
 }
