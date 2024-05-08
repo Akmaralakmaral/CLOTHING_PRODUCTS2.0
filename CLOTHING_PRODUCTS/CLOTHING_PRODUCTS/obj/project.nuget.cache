@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cljGZz39PNVc0395g2t2jQIAZjYDCCUbxv8D+ZyDzNiCD8klkDnSdCNVhdnWYb9MeqejI7nfJwajYfztjdWcyg==",
+  "dgSpecHash": "/rWiR9rP1bG51tyc3g6YcIuNIrg4ISrYtYVedA4HiFRvJVUJ2ui9MM45dpsrKPYlZxEO8OSV6k4dnN1Hr1MtXg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Акмарал\\Desktop\\3 КУРС ВЕСЕННИЙ СЕМЕСТР\\СУБД\\Проекты\\CLOTHING_PRODUCTS\\CLOTHING_PRODUCTS\\CLOTHING_PRODUCTS.csproj",
   "expectedPackageFiles": [
@@ -46,6 +46,10 @@
     "C:\\Users\\Акмарал\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Акмарал\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Акмарал\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Акмарал\\.nuget\\packages\\pdfsharpcore\\1.3.63\\pdfsharpcore.1.3.63.nupkg.sha512",
+    "C:\\Users\\Акмарал\\.nuget\\packages\\sharpziplib\\1.3.3\\sharpziplib.1.3.3.nupkg.sha512",
+    "C:\\Users\\Акмарал\\.nuget\\packages\\sixlabors.fonts\\1.0.0-beta17\\sixlabors.fonts.1.0.0-beta17.nupkg.sha512",
+    "C:\\Users\\Акмарал\\.nuget\\packages\\sixlabors.imagesharp\\1.0.4\\sixlabors.imagesharp.1.0.4.nupkg.sha512",
     "C:\\Users\\Акмарал\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\Акмарал\\.nuget\\packages\\system.configuration.configurationmanager\\6.0.1\\system.configuration.configurationmanager.6.0.1.nupkg.sha512",
     "C:\\Users\\Акмарал\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.0\\system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",

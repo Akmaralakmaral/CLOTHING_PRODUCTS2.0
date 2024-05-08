@@ -6,9 +6,10 @@
 
 <h2>@ViewData["Title"]</h2>
  @if (ViewContext.HttpContext.Session.GetString("UserRole") != "Директор")
-                {
-<a asp-action="Create" class="btn btn-primary">Make a sale</a>
-                }
+    {
+        <a asp-action="Create" class="btn btn-primary">Make a sale</a>
+    }
+<a asp-action="Report" class="btn btn-primary">Make a report</a>
 <table class="table">
     <thead>
         <tr>
