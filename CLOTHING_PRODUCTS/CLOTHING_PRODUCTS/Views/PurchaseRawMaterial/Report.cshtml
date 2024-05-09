@@ -1,0 +1,95 @@
+﻿@model List<PurchaseRawMaterial>
+
+@{
+    var totalQuantity = ViewBag.TotalQuantity;
+    var totalAmount = ViewBag.TotalAmount;
+}
+
+<form id="reportForm" asp-controller="PurchaseRawMaterial" asp-action="Report" method="get">
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" value="@ViewBag.SelectedStartDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewBag.SelectedEndDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <!-- Кнопка Submit больше не нужна -->
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>Employee Name</th>
+                <th>RawMaterial Name</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.Employee.FullName</td>
+                    <td>@item.RawMaterial.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Amount.ToString("N2")</td>
+                    <td>@item.Date.ToShortDateString()</td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2">Total:</td>
+                <td>@Model.Sum(item => item.Quantity)</td>
+                <td>@Model.Sum(item => item.Amount).ToString("N2")</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data available.</p>
+}
+<a href="@Url.Action("DownloadPdf", "PurchaseRawMaterial", new { startDate = ViewBag.SelectedStartDate, endDate = ViewBag.SelectedEndDate })">Download PDF</a>
+
+
+
+@section Scripts {
+    <script>
+        // Обработчик изменения значений в полях даты
+        document.getElementById('startDate').addEventListener('change', function () {
+            if (document.getElementById('endDate').value) { // Проверка наличия значения в поле "End Date"
+                updateUrl(); // Обновляем URL
+            }
+        });
+
+        document.getElementById('endDate').addEventListener('change', function () {
+            if (document.getElementById('startDate').value) { // Проверка наличия значения в поле "Start Date"
+                updateUrl(); // Обновляем URL
+            }
+        });
+
+        // Функция для обновления URL
+        function updateUrl() {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            var url = '@Url.Action("Report", "PurchaseRawMaterial")'; // Получаем URL контроллера и действия
+
+            // Добавляем параметры дат к URL
+            if (startDate) {
+                url += '?startDate=' + startDate;
+            }
+            if (endDate) {
+                url += '&endDate=' + endDate;
+            }
+
+            window.location.href = url; // Переходим по новому URL
+        }
+    </script>
+}
