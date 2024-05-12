@@ -3,7 +3,11 @@ using CLOTHING_PRODUCTS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using PdfSharpCore;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 using System.Data;
+using System.Globalization;
 
 namespace CLOTHING_PRODUCTS.Controllers
 {
@@ -136,6 +140,135 @@ namespace CLOTHING_PRODUCTS.Controllers
             // Возвращаем пользователя на страницу Index
             return RedirectToAction(nameof(Index), new { year = year, month = month, fromEditGeneral = fromEditGeneral });
         }
+
+        public async Task<IActionResult> Report(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate == null)
+            {
+                startDate = DateTime.Today; // Устанавливаем сегодняшнюю дату по умолчанию
+            }
+
+            if (endDate == null)
+            {
+                endDate = DateTime.Today; // Устанавливаем сегодняшнюю дату по умолчанию
+            }
+
+            ViewBag.SelectedStartDate = startDate;
+            ViewBag.SelectedEndDate = endDate;
+
+            // Выполняем запрос к хранимой процедуре без использования Include
+            var salariesReportData = await _context.Salaries
+                .FromSqlInterpolated($"EXEC [dbo].[SalariesReport] {startDate}, {endDate}")
+                .ToListAsync();
+
+            // Загружаем связанные данные о сотрудниках и продуктах для каждого объекта SaleProduct
+            foreach (var salariesEmployee in salariesReportData)
+            {
+                _context.Entry(salariesEmployee)
+                    .Reference(sp => sp.Employee)
+                    .Load();
+
+            }
+
+
+            return View(salariesReportData);
+        }
+
+
+
+      public IActionResult DownloadPdf(DateTime startDate, DateTime endDate)
+{
+    // Создаем документ PDF с форматом страницы A4
+    var document = new PdfDocument();
+    var page = document.AddPage();
+    page.Size = PageSize.A4; // Установка формата страницы A4
+    var graphics = XGraphics.FromPdfPage(page);
+    var font = new XFont("Arial", 10, XFontStyle.Regular); // Уменьшаем размер шрифта
+
+    // Отображаем заголовок и интервал времени в начале документа
+    graphics.DrawString("Salary Report", font, XBrushes.Black, new XRect(30, 30, page.Width.Point, 20), XStringFormats.TopCenter);
+    graphics.DrawString($"Interval: {startDate.ToShortDateString()} - {endDate.ToShortDateString()}", font, XBrushes.Black, new XRect(30, 45, page.Width.Point, 20), XStringFormats.TopCenter);
+
+    // Определяем ширину и высоту столбцов и строк таблицы
+    double columnWidth = 50; // Уменьшаем ширину столбцов
+    double rowHeight = 15; // Уменьшаем высоту строк
+
+    // Отображаем заголовки таблицы в PDF
+    int yPos = 70; // Начальная позиция вертикального расположения
+
+    // Заголовки столбцов
+    string[] columnHeaders = { "Year", "Month", "Employee", "Purchase", "Product", "Sales", "Common", "Salary Amount", "Bonus", "General", "Issued" };
+
+    // Отображаем заголовки таблицы
+    for (int i = 0; i < columnHeaders.Length; i++)
+    {
+        graphics.DrawRectangle(XBrushes.LightGray, new XRect(30 + i * columnWidth, yPos, columnWidth, rowHeight));
+        graphics.DrawString(columnHeaders[i], font, XBrushes.Black, new XRect(30 + i * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    }
+
+    // Увеличиваем позицию для следующей строки
+    yPos += (int)rowHeight;
+
+    // Выполняем хранимую процедуру и получаем данные
+    var manufacturingReportData = _context.Salaries
+        .FromSqlInterpolated($"EXEC [dbo].[SalariesReport] {startDate}, {endDate}")
+        .ToList();
+
+    // Заполняем таблицу данными
+    foreach (var item in manufacturingReportData)
+    {
+        // Получаем имя сотрудника и название продукта
+        var employeeName = GetEmployeeNameById(item.EmployeeID);
+
+        // Отображаем данные в соответствующих столбцах таблицы
+        string[] rowData = {item.Year.ToString(), @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), employeeName, item.PurchaseCount.ToString(), item.ProductCount.ToString(), item.SalesCount.ToString(),
+        item.CommonCount.ToString(), item.SalaryAmount.ToString(), item.Bonus.ToString(), item.General.ToString(),item.Issued.ToString() };
+
+        for (int i = 0; i < rowData.Length; i++)
+        {
+            graphics.DrawRectangle(XBrushes.White, new XRect(30 + i * columnWidth, yPos, columnWidth, rowHeight));
+            graphics.DrawString(rowData[i], font, XBrushes.Black, new XRect(30 + i * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+        }
+
+        // Увеличиваем позицию для следующей строки
+        yPos += (int)rowHeight;
+    }
+
+    // Добавляем строку с итогами
+    graphics.DrawRectangle(XBrushes.LightGray, new XRect(30, yPos, columnWidth, rowHeight));
+    graphics.DrawString("Total:", font, XBrushes.Black, new XRect(30, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.PurchaseCount).ToString(), font, XBrushes.Black, new XRect(30 + 3 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.ProductCount).ToString(), font, XBrushes.Black, new XRect(30 + 4 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.SalesCount).ToString(), font, XBrushes.Black, new XRect(30 + 5 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.CommonCount).ToString(), font, XBrushes.Black, new XRect(30 + 6 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.SalaryAmount).ToString(), font, XBrushes.Black, new XRect(30 + 7 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.Bonus).ToString(), font, XBrushes.Black, new XRect(30 + 8 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.General).ToString(), font, XBrushes.Black, new XRect(30 + 9 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+    graphics.DrawString(manufacturingReportData.Sum(item => item.Issued).ToString(), font, XBrushes.Black, new XRect(30 + 10 * columnWidth, yPos, columnWidth, rowHeight), XStringFormats.Center);
+
+    // Сохраняем документ в поток
+    var memoryStream = new MemoryStream();
+    document.Save(memoryStream);
+    memoryStream.Position = 0;
+
+    // Возвращаем PDF как файл для скачивания
+    return File(memoryStream, "application/pdf", "salary_report.pdf");
+}
+
+
+
+
+        private string GetEmployeeNameById(int employeeId)
+        {
+            var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+            return employee != null ? employee.FullName : " ";
+        }
+
+
+
+
+
+
 
     }
 }

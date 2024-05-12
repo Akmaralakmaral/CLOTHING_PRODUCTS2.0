@@ -1,0 +1,116 @@
+﻿@using System.Globalization;
+@model List<Salary>
+
+@{
+    var totalQuantity = ViewBag.TotalQuantity;
+
+}
+
+<form id="reportForm" asp-controller="KURSOVAYASalary" asp-action="Report" method="get">
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" value="@ViewBag.SelectedStartDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewBag.SelectedEndDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <!-- Кнопка Submit больше не нужна -->
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th>Year</th>
+                <th>Month</th>
+                <th>Employee ID</th>
+                <th>Purchase Count</th>
+                <th>Product Count</th>
+                <th>Sales Count</th>
+                <th>Common Count</th>
+                <th>Salary Amount</th>
+                <th>Bonus</th>
+                <th>General</th>
+                <th>Issued</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    
+                    <td>@item.Year</td>
+                    <td>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month)</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.PurchaseCount</td>
+                    <td>@item.ProductCount</td>
+                    <td>@item.SalesCount</td>
+                    <td>@item.CommonCount</td>
+                    <td>@item.SalaryAmount</td>
+                    <td>@item.Bonus</td>
+                    <td>@item.General</td>
+                    <td>@item.Issued</td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3">Total:</td>
+                <td>@Model.Sum(item => item.PurchaseCount)</td>
+                <td>@Model.Sum(item => item.ProductCount)</td>
+                <td>@Model.Sum(item => item.SalesCount)</td>
+                <td>@Model.Sum(item => item.CommonCount)</td>
+                <td>@Model.Sum(item => item.SalaryAmount)</td>
+                <td>@Model.Sum(item => item.Bonus)</td>
+                <td>@Model.Sum(item => item.General)</td>
+                <td>@Model.Sum(item => item.Issued)</td>
+
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data available.</p>
+}
+
+<a href="@Url.Action("DownloadPdf", "KURSOVAYASalary", new { startDate = ViewBag.SelectedStartDate, endDate = ViewBag.SelectedEndDate })">Download PDF</a>
+
+
+@section Scripts {
+    <script>
+        // Обработчик изменения значений в полях даты
+        document.getElementById('startDate').addEventListener('change', function () {
+            if (document.getElementById('endDate').value) { // Проверка наличия значения в поле "End Date"
+                updateUrl(); // Обновляем URL
+            }
+        });
+
+        document.getElementById('endDate').addEventListener('change', function () {
+            if (document.getElementById('startDate').value) { // Проверка наличия значения в поле "Start Date"
+                updateUrl(); // Обновляем URL
+            }
+        });
+
+        // Функция для обновления URL
+        function updateUrl() {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            var url = '@Url.Action("Report", "KURSOVAYASalary")'; // Получаем URL контроллера и действия
+
+            // Добавляем параметры дат к URL
+            if (startDate) {
+                url += '?startDate=' + startDate;
+            }
+            if (endDate) {
+                url += '&endDate=' + endDate;
+            }
+
+            window.location.href = url; // Переходим по новому URL
+        }
+    </script>
+}
